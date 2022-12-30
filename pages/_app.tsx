@@ -5,6 +5,7 @@ import NextNProgress from "../components/layout/NextNProgress";
 
 import "@fontsource/roboto-mono";
 import theme from "../theme/theme";
+import { SessionProvider } from "next-auth/react";
 
 export type CustomPageProps = {
   hideHeader?: boolean;
@@ -20,11 +21,12 @@ export type CustomPageProps = {
  */
 const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
   return (
-    <ChakraProvider resetCSS theme={theme}>
-
-      <NextNProgress />
-      <Component {...pageProps} />
-    </ChakraProvider >
+    <SessionProvider session={pageProps.session}>
+      <ChakraProvider resetCSS theme={theme}>
+        <NextNProgress />
+        <Component {...pageProps} />
+      </ChakraProvider>
+    </SessionProvider>
   );
 };
 

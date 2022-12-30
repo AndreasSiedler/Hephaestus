@@ -2,6 +2,7 @@ import React from "react";
 // import Storyblok from "../config/storyblok-service";
 import Layout from "../components/layout/Layout";
 import { Container, Heading } from "@chakra-ui/react";
+import { useSession } from "next-auth/react";
 
 interface HomeProps {
   story: any;
@@ -19,10 +20,13 @@ export default function Home({ story, preview }: HomeProps) {
   // const enableBridge = preview; // enable bridge only in prevew mode
 
   // story = useStoryblok(story, enableBridge);
+  const session = useSession();
+
   return (
     <Layout title="Bittstorm - Schaffe Platz für Neues">
       <Container maxW={"container.2xl"} centerContent>
         <Heading>Juhu</Heading>
+        {JSON.stringify(session)}
       </Container>
     </Layout>
   );

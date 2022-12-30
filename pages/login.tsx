@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   if (session) {
     return {
       redirect: {
-        destination: LOGIN_ROUTE,
+        destination: "/",
         permanent: false,
       },
     };

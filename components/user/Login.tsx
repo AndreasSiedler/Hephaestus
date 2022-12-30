@@ -100,6 +100,18 @@ export default function Login(): ReactElement {
       throw error;
     }
   }
+  /**
+   * Signin with github
+   * @return {Promise<CognitoUser>}
+   */
+  async function signInWithGithub() {
+    try {
+      const resutlt = await signIn("github");
+      console.log(resutlt);
+    } catch (error) {
+      throw error;
+    }
+  }
 
   return (
     <Flex minH={"100vh"} align={"center"} justify={"center"}>
@@ -112,16 +124,10 @@ export default function Login(): ReactElement {
         </Stack>
         <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8}>
           {/* Github social signin button */}
-          <a
-            target={"_blank"}
-            href={`https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&scope=user,repo`}
-            rel="noreferrer"
-          >
-            <Button size={"xl"} w={"full"} mb={"4"} variant={"outline"}>
-              <Icon as={BsGithub} mr={"2"} />
-              Continue with Github
-            </Button>
-          </a>
+          <Button onClick={signInWithGithub} size={"xl"} w={"full"} mb={"4"} variant={"outline"}>
+            <Icon as={BsGithub} mr={"2"} />
+            Sign in with Github
+          </Button>
           <Center>
             <Text>or</Text>
           </Center>
