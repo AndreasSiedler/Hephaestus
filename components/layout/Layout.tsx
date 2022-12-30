@@ -1,5 +1,6 @@
 import React from "react";
 import Head from "next/head";
+import Header from "./Header";
 
 type LayoutProps = {
   children: any;
@@ -14,6 +15,7 @@ const Layout = ({ children, title = "Book Best Hotels for your Holiday" }: Layou
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
+      <Header />
       {children}
     </>
   );
