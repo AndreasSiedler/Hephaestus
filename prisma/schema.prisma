@@ -27,3 +27,16 @@ model Category {
     description String
     products    Product[]
 }
+
+model User {
+  id String  @id @default(cuid())
+  email String  @unique
+  name String
+  password String?
+  avatar Json
+  isComplete Boolean
+  resetPasswordToken String
+  resetPasswordExpire String
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+}
