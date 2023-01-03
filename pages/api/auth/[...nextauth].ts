@@ -1,7 +1,6 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import NextAuth from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
-import { signIn } from "next-auth/react";
 import prisma from "../../../lib/prisma";
 
 export default NextAuth({
@@ -24,12 +23,6 @@ export default NextAuth({
           scope: account?.scope,
         },
       });
-    },
-  },
-  callbacks: {
-    async signIn(data: any) {
-      // console.log(data);
-      return true;
     },
   },
   providers: [

@@ -3,6 +3,7 @@ import React from "react";
 import Layout from "../components/layout/Layout";
 import { Container, Heading } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
+import prisma from "../lib/prisma";
 
 interface HomeProps {
   story: any;
@@ -39,6 +40,8 @@ export default function Home({ story, preview }: HomeProps) {
  */
 export async function getStaticProps({ preview = false }) {
   // load the published content outside of the preview mode
+  const accounts = await prisma.account.findMany();
+  console.log(accounts);
   const nodeEnv = process.env.NODE_ENV;
   const sbParams = {
     version: nodeEnv === "production" ? "published" : "draft", // or 'published'
