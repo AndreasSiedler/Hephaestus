@@ -41,7 +41,6 @@ export default function Home({ story, preview }: HomeProps) {
 export async function getStaticProps({ preview = false }) {
   // load the published content outside of the preview mode
   const accounts = await prisma.account.findMany();
-  console.log(accounts);
   const nodeEnv = process.env.NODE_ENV;
   const sbParams = {
     version: nodeEnv === "production" ? "published" : "draft", // or 'published'

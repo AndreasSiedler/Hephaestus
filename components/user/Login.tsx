@@ -107,7 +107,6 @@ export default function Login(): ReactElement {
   async function signInWithGithub() {
     try {
       const resutlt = await signIn("github");
-      console.log(resutlt);
     } catch (error) {
       throw error;
     }

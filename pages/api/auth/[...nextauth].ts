@@ -6,7 +6,14 @@ import prisma from "../../../lib/prisma";
 export default NextAuth({
   adapter: PrismaAdapter(prisma),
   events: {
-    async signIn({ user, account }) {
+    async signIn({ user, account, profile, isNewUser }) {
+      // Get username from github api and save it
+      if (profile) {
+        const res = await fetch(`https://api.github.com/user/${account?.providerAccountId}`);
+        const data = await res.json();
+        console.log(data);
+      }
+
       // Update access_token and scope
       // Workaround while prismaadapter not updating account Updates
       const acc = await prisma.account.findFirst({
