@@ -2,17 +2,23 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import NextAuth from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import prisma from "../../../lib/prisma";
+import { GithubUser } from "../../../util/types";
 
 export default NextAuth({
   adapter: PrismaAdapter(prisma),
   events: {
     async signIn({ user, account, profile, isNewUser }) {
       // Get username from github api and save it
-      if (profile) {
-        const res = await fetch(`https://api.github.com/user/${account?.providerAccountId}`);
-        const data = await res.json();
-        console.log(data);
-      }
+      const res = await fetch(`https://api.github.com/user/${account?.providerAccountId}`);
+      const data = (await res.json()) as GithubUser;
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          username: data.login,
+        },
+      });
 
       // Update access_token and scope
       // Workaround while prismaadapter not updating account Updates
