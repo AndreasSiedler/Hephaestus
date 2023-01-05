@@ -4,6 +4,8 @@ import resolvers from "../../graphql/resolvers";
 import typeDefs from "../../graphql/typeDefs";
 import { makeExecutableSchema } from "graphql-tools";
 import { PageConfig } from "next";
+import { getSession } from "next-auth/react";
+import { GraphQLContext } from "../../util/types";
 
 export const config: PageConfig = {
   api: {
@@ -22,6 +24,10 @@ const apolloServer = new ApolloServer({
   schema,
   csrfPrevention: true,
   cache: "bounded",
+  context: async ({ req, res }): Promise<GraphQLContext> => {
+    const session = await getSession({ req });
+    return { session };
+  },
 });
 
 const startServer = apolloServer.start();

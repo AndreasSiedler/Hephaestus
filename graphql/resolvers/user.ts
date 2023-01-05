@@ -1,9 +1,17 @@
+import { CreateUsernameVariables, GraphQLContext } from "../../util/types";
+
 const resolvers = {
   Query: {
     searchUsers: () => {},
   },
   Mutation: {
-    createUsername: () => {},
+    createUsername: (_: any, args: CreateUsernameVariables, context: GraphQLContext) => {
+      console.log(context);
+      return {
+        error: "Hell no",
+        success: true,
+      };
+    },
   },
 };
 
