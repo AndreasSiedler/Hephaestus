@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import { Session } from "next-auth";
 
 export interface GithubUser {
@@ -19,8 +20,9 @@ export interface CreateUsernameData {
 }
 
 /**
- * Backend
+ * GraphQL
  */
 export interface GraphQLContext {
   session: Session | null;
+  prisma: PrismaClient;
 }

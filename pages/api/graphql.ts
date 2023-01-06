@@ -1,10 +1,11 @@
-import Cors from "micro-cors";
 import { ApolloServer } from "apollo-server-micro";
-import resolvers from "../../graphql/resolvers";
-import typeDefs from "../../graphql/typeDefs";
 import { makeExecutableSchema } from "graphql-tools";
+import Cors from "micro-cors";
 import { PageConfig } from "next";
 import { getSession } from "next-auth/react";
+import resolvers from "../../graphql/resolvers";
+import typeDefs from "../../graphql/typeDefs";
+import prisma from "../../lib/prisma";
 import { GraphQLContext } from "../../util/types";
 
 export const config: PageConfig = {
@@ -26,7 +27,7 @@ const apolloServer = new ApolloServer({
   cache: "bounded",
   context: async ({ req, res }): Promise<GraphQLContext> => {
     const session = await getSession({ req });
-    return { session };
+    return { session, prisma };
   },
 });
 
