@@ -1,8 +1,11 @@
 import { extendTheme, ThemeConfig } from "@chakra-ui/react";
 import { breakpoints } from "./foundations/breakpoints";
 import { fonts } from "./foundations/fonts";
+import { StepsStyleConfig as Steps } from "chakra-ui-steps";
 
 const components = {
+  Steps,
+
   Button: {
     sizes: {
       xl: {
