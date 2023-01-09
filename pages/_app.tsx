@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
-import NextNProgress from "../components/layout/NextNProgress";
 
 import "@fontsource/roboto-mono";
 import theme from "../theme/theme";
@@ -26,7 +25,6 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
     <ApolloProvider client={client}>
       <SessionProvider session={pageProps.session}>
         <ChakraProvider resetCSS theme={theme}>
-          <NextNProgress />
           <Component {...pageProps} />
         </ChakraProvider>
       </SessionProvider>
