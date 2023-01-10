@@ -28,7 +28,14 @@ export default function Devs() {
         <Header />
         <HStack spacing={["0", "0", "10"]} mt="10">
           <SkeletionProfileCard />
-          <Box width="100%" border="1px solid #B73CF1" px="6" py="10" borderRadius="xl">
+          <Box
+            bg="gray.900"
+            width="100%"
+            border="3px solid #B73CF1"
+            px="6"
+            py="10"
+            borderRadius="xl"
+          >
             <Center>
               <Avatar size="2xl" name="Segun Adebayo" src="https://bit.ly/sage-adebayo">
                 <AvatarBadge boxSize="1em" bg="green.500" />
@@ -78,6 +85,7 @@ export default function Devs() {
 function SkeletionProfileCard() {
   return (
     <Box
+      bg="gray.900"
       display={["none", "none", "block"]}
       width="100%"
       border="1px solid #B73CF1"
