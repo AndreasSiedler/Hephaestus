@@ -45,6 +45,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  friends       Friendship[] @relation(name: "friends")
+  friendsOf     Friendship[] @relation(name: "friendsOf")
 }
 
 model VerificationToken {
@@ -55,6 +57,19 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model Friendship {
+  id        Int       @id @default(autoincrement())
+  userId    String
+  friendId  String
+  user      User      @relation(name: "friends", fields: [userId], references: [id])
+  friend    User      @relation(name: "friendsOf", fields: [friendId], references: [id])
+  status    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([userId, friendId])
+  @@index([friendId])
+}
 model Product {
     id          Int       @id @default(autoincrement())
     name        String
