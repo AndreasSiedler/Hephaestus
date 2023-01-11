@@ -63,7 +63,7 @@ model Friendship {
   friendId  String
   user      User      @relation(name: "friends", fields: [userId], references: [id])
   friend    User      @relation(name: "friendsOf", fields: [friendId], references: [id])
-  status    Boolean   @default(true)
+  status    Boolean   @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
