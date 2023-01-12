@@ -1,7 +1,9 @@
-import { Box, Container, Flex } from "@chakra-ui/react";
+import { Container, Flex } from "@chakra-ui/react";
 import { NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 import { useState } from "react";
+import Conversations from "../components/Chat/Conversations";
+import Feed from "../components/Chat/Feed";
 import Header from "../components/layout/Header";
 import Layout from "../components/layout/Layout";
 
@@ -10,9 +12,12 @@ export default function Chat() {
 
   return (
     <Layout title="Bittstorm - Schaffe Platz für Neues">
-      <Container maxW={"container.lg"} px={10} py={5}>
+      <Container height="100vh" maxW={"container.lg"} py={5}>
         <Header />
-        <Flex>Chat</Flex>
+        <Flex>
+          <Conversations />
+          <Feed />
+        </Flex>
       </Container>
     </Layout>
   );

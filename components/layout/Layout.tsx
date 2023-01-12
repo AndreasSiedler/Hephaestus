@@ -1,14 +1,15 @@
-import { Box } from "@chakra-ui/react";
+import { Box, ChakraProps } from "@chakra-ui/react";
 import Head from "next/head";
 
 type LayoutProps = {
+  styles?: ChakraProps;
   children: any;
   title?: string;
 };
 
-const Layout = ({ children, title = "Book Best Hotels for your Holiday" }: LayoutProps) => {
+const Layout = ({ children, title = "Book Best Hotels for your Holiday", styles }: LayoutProps) => {
   return (
-    <Box bg="black" minH="100vH">
+    <Box bg="black" minH="100vH" {...styles}>
       <Head>
         <title>{title}</title>
         <meta charSet="utf-8" />

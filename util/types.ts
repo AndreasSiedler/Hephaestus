@@ -19,6 +19,21 @@ export interface CreateUsernameData {
   };
 }
 
+export interface SearchUsersValriables {
+  username: string;
+}
+
+export interface SearchUsersData {
+  searchUsers: SearchedUser[];
+}
+
+export interface SearchedUser {
+  id: string;
+  name: string;
+  username: string;
+  image: string;
+}
+
 /**
  * GraphQL
  */
