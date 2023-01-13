@@ -52,6 +52,13 @@ const AddConversationDialog = ({ isOpen, onClose }: Props) => {
     });
   };
 
+  const removeParticipant = (removedParticipant: SearchedUser) => {
+    setParticipants((prevParticipants) => {
+      const newParticipants = prevParticipants.filter((item) => item.id !== removedParticipant.id);
+      return newParticipants;
+    });
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -75,17 +82,7 @@ const AddConversationDialog = ({ isOpen, onClose }: Props) => {
             </InputRightElement>
           </InputGroup>
           {participants && (
-            <Participants
-              participants={participants}
-              removeParticipant={(removedParticipant) =>
-                setParticipants((prevParticipants) => {
-                  const newParticipants = prevParticipants.filter(
-                    (item) => item.id !== removedParticipant.id
-                  );
-                  return newParticipants;
-                })
-              }
-            />
+            <Participants participants={participants} removeParticipant={removeParticipant} />
           )}
           {searchedUsers && (
             <SearchedUserList
