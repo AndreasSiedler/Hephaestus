@@ -1,4 +1,4 @@
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { SearchIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -16,9 +16,17 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import UserOperations from "../../../../graphql/operations/user";
-import { SearchedUser, SearchUsersData, SearchUsersValriables } from "../../../../util/types";
+import ConversationOperations from "../../../../graphql/operations/conversation";
+import {
+  CreateConversationData,
+  CreateConversationVariables,
+  SearchedUser,
+  SearchUsersData,
+  SearchUsersValriables,
+} from "../../../../util/types";
 import Participants from "./Participants";
 import SearchedUserList from "./SearchedUserList";
+import { useSession } from "next-auth/react";
 
 type Props = {
   isOpen: boolean;
@@ -28,11 +36,17 @@ type Props = {
 const AddConversationDialog = ({ isOpen, onClose }: Props) => {
   const [searchedUsername, setSearchedUsername] = useState("");
   const [participants, setParticipants] = useState<SearchedUser[]>([]);
+  const session = useSession();
 
   const [searchUsers, { data: searchedUsers, loading, error }] = useLazyQuery<
     SearchUsersData,
     SearchUsersValriables
   >(UserOperations.Queries.searchUsers);
+
+  const [createConversation, { data }] = useMutation<
+    CreateConversationData,
+    CreateConversationVariables
+  >(ConversationOperations.Mutations.createConversation);
 
   const searchUser = async () => {
     await searchUsers({
@@ -56,6 +70,15 @@ const AddConversationDialog = ({ isOpen, onClose }: Props) => {
     setParticipants((prevParticipants) => {
       const newParticipants = prevParticipants.filter((item) => item.id !== removedParticipant.id);
       return newParticipants;
+    });
+  };
+
+  const onCreateConversation = () => {
+    const participantIds = [session.data?.user.id!, ...participants.map((p) => p.id)];
+    createConversation({
+      variables: {
+        participants: participantIds,
+      },
     });
   };
 
@@ -97,7 +120,7 @@ const AddConversationDialog = ({ isOpen, onClose }: Props) => {
           <Button mr={3} onClick={onClose}>
             Cancel
           </Button>
-          <Button bgColor="#B73CF1" variant="solid">
+          <Button bgColor="#B73CF1" variant="solid" onClick={onCreateConversation}>
             Add Conversation
           </Button>
         </ModalFooter>

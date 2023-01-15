@@ -35,6 +35,20 @@ export interface SearchedUser {
 }
 
 /**
+ * Conversation
+ */
+export interface CreateConversationData {
+  createConversation: {
+    success: boolean;
+    error: string;
+  };
+}
+
+export interface CreateConversationVariables {
+  participants: String[];
+}
+
+/**
  * GraphQL
  */
 export interface GraphQLContext {
