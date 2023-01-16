@@ -45,7 +45,7 @@ const AddConversationDialog = ({ isOpen, onClose }: Props) => {
     SearchUsersValriables
   >(UserOperations.Queries.searchUsers);
 
-  const [createConversation, { data }] = useMutation<
+  const [createConversation, { data, loading: createConversationLoading }] = useMutation<
     CreateConversationData,
     CreateConversationVariables
   >(ConversationOperations.Mutations.createConversation);
@@ -75,19 +75,21 @@ const AddConversationDialog = ({ isOpen, onClose }: Props) => {
     });
   };
 
-  const onCreateConversation = () => {
+  const onCreateConversation = async () => {
     try {
       const participantIds = [session.data?.user.id!, ...participants.map((p) => p.id)];
-      createConversation({
+      const data = await createConversation({
         variables: {
           participants: participantIds,
         },
       });
+      console.log(data);
     } catch (error: any) {
       toast({
         title: "Error",
         description: error.message,
         status: "error",
+        position: "top-right",
       });
     }
   };
@@ -130,7 +132,12 @@ const AddConversationDialog = ({ isOpen, onClose }: Props) => {
           <Button mr={3} onClick={onClose}>
             Cancel
           </Button>
-          <Button bgColor="#B73CF1" variant="solid" onClick={onCreateConversation}>
+          <Button
+            bgColor="#B73CF1"
+            variant="solid"
+            onClick={onCreateConversation}
+            isLoading={createConversationLoading}
+          >
             Add Conversation
           </Button>
         </ModalFooter>

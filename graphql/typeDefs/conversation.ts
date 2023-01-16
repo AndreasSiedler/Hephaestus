@@ -6,8 +6,7 @@ const typeDefs = gql`
   }
 
   type CreateConversationResponse {
-    success: Boolean
-    error: String
+    conversationId: String
   }
 `;
 

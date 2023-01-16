@@ -6,8 +6,7 @@ export default {
     createConversation: gql`
       mutation CreateConversation($participants: [String]!) {
         createConversation(participants: $participants) {
-          success
-          error
+          conversationId
         }
       }
     `,

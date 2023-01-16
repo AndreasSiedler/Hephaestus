@@ -38,14 +38,15 @@ export interface SearchedUser {
  * Conversation
  */
 export interface CreateConversationData {
-  createConversation: {
-    success: boolean;
-    error: string;
-  };
+  createConversation: CreateConversationResponse;
+}
+
+export interface CreateConversationResponse {
+  conversationId: string;
 }
 
 export interface CreateConversationVariables {
-  participants: String[];
+  participants: string[];
 }
 
 /**
