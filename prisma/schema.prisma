@@ -47,6 +47,7 @@ model User {
   sessions      Session[]
   friends       Friendship[] @relation(name: "friends")
   friendsOf     Friendship[] @relation(name: "friendsOf")
+  conversations ConversationParticipant[]
 }
 
 model VerificationToken {
@@ -55,6 +56,24 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Conversation {
+  id          String    @id @default(cuid())
+  particpants ConversationParticipant[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model ConversationParticipant {
+  id              String        @id @default(cuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  conversationId  String       
+  conversation    Conversation  @relation(fields: [conversationId], references: [id])
+
+  @@index([userId])
+  @@index([conversationId])
 }
 
 model Friendship {
@@ -69,22 +88,4 @@ model Friendship {
 
   @@unique([userId, friendId])
   @@index([friendId])
-}
-model Product {
-    id          Int       @id @default(autoincrement())
-    name        String
-    description String
-    price       Decimal
-    image       String
-    category    Category? @relation(fields: [category_id], references: [id])
-    category_id Int
-
-    @@index([category_id])
-}
-
-model Category {
-    id          Int       @id @default(autoincrement())
-    name        String
-    description String
-    products    Product[]
 }
