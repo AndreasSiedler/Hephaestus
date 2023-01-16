@@ -13,6 +13,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import UserOperations from "../../../../graphql/operations/user";
@@ -37,6 +38,7 @@ const AddConversationDialog = ({ isOpen, onClose }: Props) => {
   const [searchedUsername, setSearchedUsername] = useState("");
   const [participants, setParticipants] = useState<SearchedUser[]>([]);
   const session = useSession();
+  const toast = useToast();
 
   const [searchUsers, { data: searchedUsers, loading, error }] = useLazyQuery<
     SearchUsersData,
@@ -74,12 +76,20 @@ const AddConversationDialog = ({ isOpen, onClose }: Props) => {
   };
 
   const onCreateConversation = () => {
-    const participantIds = [session.data?.user.id!, ...participants.map((p) => p.id)];
-    createConversation({
-      variables: {
-        participants: participantIds,
-      },
-    });
+    try {
+      const participantIds = [session.data?.user.id!, ...participants.map((p) => p.id)];
+      createConversation({
+        variables: {
+          participants: participantIds,
+        },
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        status: "error",
+      });
+    }
   };
 
   return (

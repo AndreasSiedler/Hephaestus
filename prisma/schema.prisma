@@ -1,27 +1,27 @@
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["referentialIntegrity"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-    provider             = "mysql"
-    url                  = env("DATABASE_URL")
-    referentialIntegrity = "prisma"
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -37,17 +37,18 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  username      String?    @unique
+  id            String                    @id @default(cuid())
+  username      String?                   @unique
   name          String?
-  email         String?   @unique
+  email         String?                   @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  friends       Friendship[] @relation(name: "friends")
-  friendsOf     Friendship[] @relation(name: "friendsOf")
+  friends       Friendship[]              @relation(name: "friends")
+  friendsOf     Friendship[]              @relation(name: "friendsOf")
   conversations ConversationParticipant[]
+  messages      Message[]
 }
 
 model VerificationToken {
@@ -59,32 +60,53 @@ model VerificationToken {
 }
 
 model Conversation {
-  id          String    @id @default(cuid())
-  particpants ConversationParticipant[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id              String                    @id @default(cuid())
+  messages        Message[]
+  latestMessageId String                    @unique
+  latestMessage   Message?                  @relation(name: "latestConversationMessage", fields: [latestMessageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  particpants     ConversationParticipant[]
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
 }
 
 model ConversationParticipant {
-  id              String        @id @default(cuid())
-  userId          String
-  user            User          @relation(fields: [userId], references: [id])
-  conversationId  String       
-  conversation    Conversation  @relation(fields: [conversationId], references: [id])
+  id                   String       @id @default(cuid())
+  userId               String
+  user                 User         @relation(fields: [userId], references: [id])
+  conversationId       String
+  conversation         Conversation @relation(fields: [conversationId], references: [id])
+  hasSeenLatestMessage Boolean
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
 
   @@index([userId])
   @@index([conversationId])
 }
 
+model Message {
+  id             String        @id @default(cuid())
+  conversationId String
+  conversation   Conversation  @relation(fields: [conversationId], references: [id])
+  isLatestIn     Conversation? @relation(name: "latestConversationMessage")
+  content        String
+  authorId       String
+  author         User          @relation(fields: [authorId], references: [id])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([conversationId])
+  @@index([authorId])
+}
+
 model Friendship {
-  id        Int       @id @default(autoincrement())
+  id        String   @id @default(cuid())
   userId    String
+  user      User     @relation(name: "friends", fields: [userId], references: [id])
   friendId  String
-  user      User      @relation(name: "friends", fields: [userId], references: [id])
-  friend    User      @relation(name: "friendsOf", fields: [friendId], references: [id])
-  status    Boolean   @default(false)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  friend    User     @relation(name: "friendsOf", fields: [friendId], references: [id])
+  status    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([userId, friendId])
   @@index([friendId])
