@@ -7,6 +7,33 @@ import {
 } from "../../util/types";
 
 const resolvers = {
+  Query: {
+    conversations: async (_: any, __: any, context: GraphQLContext) => {
+      const { prisma, session } = context;
+      if (!session?.user) {
+        throw new ApolloError("Not authorized");
+      }
+
+      try {
+        const conversations = prisma.conversation.findMany({
+          where: {
+            participants: {
+              some: {
+                userId: {
+                  equals: session.user.id,
+                },
+              },
+            },
+          },
+          include: conversationPopulated,
+        });
+        return conversations;
+      } catch (error) {
+        console.log("conversations error", error);
+        throw new ApolloError("Error fetching conseversations");
+      }
+    },
+  },
   Mutation: {
     createConversation: async (
       _: any,
@@ -23,7 +50,7 @@ const resolvers = {
       try {
         const conversation = await prisma.conversation.create({
           data: {
-            particpants: {
+            participants: {
               createMany: {
                 data: participants.map((id) => {
                   return {
@@ -59,7 +86,7 @@ const participantPopulated = Prisma.validator<Prisma.ConversationParticipantIncl
 });
 
 const conversationPopulated = Prisma.validator<Prisma.ConversationInclude>()({
-  particpants: {
+  participants: {
     include: participantPopulated,
   },
   latestMessage: {

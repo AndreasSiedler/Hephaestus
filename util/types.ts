@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import { Session } from "next-auth";
 
 export interface GithubUser {
@@ -37,6 +37,25 @@ export interface SearchedUser {
 /**
  * Conversation
  */
+export interface Message {
+  id: string;
+  body: string;
+}
+
+export interface ConversationParticipant {
+  id: string;
+  hasSeenLatestMessage: Boolean;
+  user: SearchedUser;
+}
+export interface ConversationPopulated {
+  id: string;
+  latestMessage: Message;
+  participants: ConversationParticipant[];
+}
+export interface ConversationsData {
+  conversations: ConversationPopulated[];
+}
+
 export interface CreateConversationData {
   createConversation: CreateConversationResponse;
 }
