@@ -1,5 +1,6 @@
-import { PrismaClient, User } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { Session } from "next-auth";
+import { conversationPopulated } from "../graphql/resolvers/conversation";
 
 export interface GithubUser {
   login: string;
@@ -35,23 +36,20 @@ export interface SearchedUser {
 }
 
 /**
- * Conversation
+ * Messages
  */
 export interface Message {
   id: string;
   body: string;
 }
 
-export interface ConversationParticipant {
-  id: string;
-  hasSeenLatestMessage: Boolean;
-  user: SearchedUser;
-}
-export interface ConversationPopulated {
-  id: string;
-  latestMessage: Message;
-  participants: ConversationParticipant[];
-}
+/**
+ * Conversation
+ */
+export type ConversationPopulated = Prisma.ConversationGetPayload<{
+  include: typeof conversationPopulated;
+}>;
+
 export interface ConversationsData {
   conversations: ConversationPopulated[];
 }

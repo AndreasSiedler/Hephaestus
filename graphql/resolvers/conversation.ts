@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { ApolloError } from "apollo-server-micro";
 import {
+  ConversationPopulated,
   CreateConversationResponse,
   CreateConversationVariables,
   GraphQLContext,
@@ -8,7 +9,11 @@ import {
 
 const resolvers = {
   Query: {
-    conversations: async (_: any, __: any, context: GraphQLContext) => {
+    conversations: async (
+      _: any,
+      __: any,
+      context: GraphQLContext
+    ): Promise<ConversationPopulated[]> => {
       const { prisma, session } = context;
       if (!session?.user) {
         throw new ApolloError("Not authorized");
@@ -74,7 +79,7 @@ const resolvers = {
   },
 };
 
-const participantPopulated = Prisma.validator<Prisma.ConversationParticipantInclude>()({
+export const participantPopulated = Prisma.validator<Prisma.ConversationParticipantInclude>()({
   user: {
     select: {
       id: true,
@@ -85,7 +90,7 @@ const participantPopulated = Prisma.validator<Prisma.ConversationParticipantIncl
   },
 });
 
-const conversationPopulated = Prisma.validator<Prisma.ConversationInclude>()({
+export const conversationPopulated = Prisma.validator<Prisma.ConversationInclude>()({
   participants: {
     include: participantPopulated,
   },
