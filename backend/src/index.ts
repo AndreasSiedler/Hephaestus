@@ -42,9 +42,7 @@ const main = async () => {
   const prisma = new PrismaClient();
   const pubsub = new PubSub();
 
-  const getSubscriptionContext = async (
-    ctx: SubscriptionContext
-  ): Promise<GraphQLContext> => {
+  const getSubscriptionContext = async (ctx: SubscriptionContext): Promise<GraphQLContext> => {
     ctx;
     // ctx is the graphql-ws Context where connectionParams live
     if (ctx.connectionParams && ctx.connectionParams.session) {
@@ -113,9 +111,7 @@ const main = async () => {
   const PORT = 4000;
 
   // Now that our HTTP server is fully set up, we can listen to it.
-  await new Promise<void>((resolve) =>
-    httpServer.listen({ port: PORT }, resolve)
-  );
+  await new Promise<void>((resolve) => httpServer.listen({ port: PORT }, resolve));
   console.log(`Server is now running on http://localhost:${PORT}/graphql`);
 };
 

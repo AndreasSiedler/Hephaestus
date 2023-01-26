@@ -27,7 +27,6 @@ const resolvers = {
             username: {
               contains: searchedUsername,
               not: myUsername,
-              mode: "insensitive",
             },
           },
         });
