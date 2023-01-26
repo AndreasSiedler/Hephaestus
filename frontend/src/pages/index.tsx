@@ -1,5 +1,4 @@
 // import Storyblok from "../config/storyblok-service";
-import { useMutation } from "@apollo/client";
 import {
   Box,
   Button,
@@ -17,8 +16,6 @@ import { useState } from "react";
 import { BsGithub } from "react-icons/bs";
 import Header from "../components/layout/Header";
 import Layout from "../components/layout/Layout";
-import UserOperations from "../graphql/operations/user";
-import { CreateUsernameData, CreateUsernameVariables } from "../util/types";
 
 interface HomeProps {}
 
@@ -29,10 +26,6 @@ interface HomeProps {}
  * @return {ReactElement}
  */
 export default function Home({}: HomeProps) {
-  const [createUsername] = useMutation<CreateUsernameData, CreateUsernameVariables>(
-    UserOperations.Mutations.createUsername
-  );
-
   const [pageLoading, setLoading] = useState(false);
 
   const handleSignin = async () => {

@@ -16,8 +16,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import UserOperations from "../../../../graphql/operations/user";
-import ConversationOperations from "../../../../graphql/operations/conversation";
+import UserOperations from "../../../../graphql/operations/users";
+import ConversationOperations from "../../../../graphql/operations/conversations";
 import {
   CreateConversationData,
   CreateConversationVariables,

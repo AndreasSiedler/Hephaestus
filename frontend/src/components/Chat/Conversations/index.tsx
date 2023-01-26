@@ -1,9 +1,9 @@
 import { useQuery } from "@apollo/client";
 import { Button, StackDivider, useDisclosure, VStack } from "@chakra-ui/react";
 import AddConversationDialog from "./AddConversationDialog";
-import ConversationOperations from "../../../graphql/operations/conversation";
-import { ConversationsData } from "../../../util/types";
+import ConversationOperations from "../../../graphql/operations/conversations";
 import ConversationItem from "./ConversationItem";
+import { ConversationsData } from "../../../util/types";
 
 type ConversationsProps = {};
 
