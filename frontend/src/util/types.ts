@@ -1,10 +1,4 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-import { Session } from "next-auth";
-import { conversationPopulated } from "../graphql/resolvers/conversation";
-
-export interface GithubUser {
-  login: string;
-}
+import { ConversationPopulated, MessagePopulated } from "../../../backend/src/util/types";
 
 /**
  * Users
@@ -20,56 +14,78 @@ export interface CreateUsernameData {
   };
 }
 
-export interface SearchUsersValriables {
+export interface SearchUsersInputs {
   username: string;
 }
 
 export interface SearchUsersData {
-  searchUsers: SearchedUser[];
+  searchUsers: Array<SearchedUser>;
 }
 
 export interface SearchedUser {
   id: string;
-  name: string;
   username: string;
-  image: string;
 }
 
 /**
  * Messages
  */
-export interface Message {
-  id: string;
-  body: string;
+export interface MessagesData {
+  messages: Array<MessagePopulated>;
 }
 
-/**
- * Conversation
- */
-export type ConversationPopulated = Prisma.ConversationGetPayload<{
-  include: typeof conversationPopulated;
-}>;
-
-export interface ConversationsData {
-  conversations: ConversationPopulated[];
-}
-
-export interface CreateConversationData {
-  createConversation: CreateConversationResponse;
-}
-
-export interface CreateConversationResponse {
+export interface MessagesVariables {
   conversationId: string;
 }
 
-export interface CreateConversationVariables {
-  participants: string[];
+export interface SendMessageVariables {
+  id: string;
+  conversationId: string;
+  senderId: string;
+  body: string;
+}
+
+export interface MessagesSubscriptionData {
+  subscriptionData: {
+    data: {
+      messageSent: MessagePopulated;
+    };
+  };
 }
 
 /**
- * GraphQL
+ * Conversations
  */
-export interface GraphQLContext {
-  session: Session | null;
-  prisma: PrismaClient;
+export interface CreateConversationData {
+  createConversation: {
+    conversationId: string;
+  };
+}
+
+export interface ConversationsData {
+  conversations: Array<ConversationPopulated>;
+}
+
+export interface ConversationCreatedSubscriptionData {
+  subscriptionData: {
+    data: {
+      conversationCreated: ConversationPopulated;
+    };
+  };
+}
+
+export interface ConversationUpdatedData {
+  conversationUpdated: {
+    conversation: Omit<ConversationPopulated, "latestMessage"> & {
+      latestMessage: MessagePopulated;
+    };
+    addedUserIds: Array<string> | null;
+    removedUserIds: Array<string> | null;
+  };
+}
+
+export interface ConversationDeletedData {
+  conversationDeleted: {
+    id: string;
+  };
 }

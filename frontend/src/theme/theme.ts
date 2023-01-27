@@ -29,7 +29,7 @@ const components = {
 
 // Add your color mode config
 const config: ThemeConfig = {
-  initialColorMode: "dark",
+  initialColorMode: "light",
 };
 
 // Extend the theme
