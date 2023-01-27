@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Center,
+  Flex,
   Heading,
   HStack,
   Icon,
@@ -18,91 +19,122 @@ import React from "react";
 import { BsGithub } from "react-icons/bs";
 import { FaReact } from "react-icons/fa";
 import { SiJavascript } from "react-icons/si";
-import { GetUserData } from "../../../util/types";
+import {
+  GetUserData,
+  RequestFriendshipData,
+  RequestFriendshipVariables,
+} from "../../../util/types";
 import UserOperations from "../../../graphql/operations/users";
 import FriendshipOperations from "../../../graphql/operations/friendships";
+import { toast } from "react-hot-toast";
 
 interface DevMatchProps {
   session: Session;
 }
 
 const DevMatch: React.FC<DevMatchProps> = ({ session }) => {
-  const { data, loading } = useQuery<GetUserData>(UserOperations.Queries.getUser);
+  const { data, refetch, loading } = useQuery<GetUserData>(UserOperations.Queries.getUser);
   const [requestFriendship, { loading: requestFriendshipLoading }] = useMutation<
-    { success: boolean; error: string },
-    { friendId: string }
+    RequestFriendshipData,
+    RequestFriendshipVariables
   >(FriendshipOperations.Mutations.requestFriendship);
 
-  const onRequestFriendshipClick = async (friendId: string) => {
+  const onRequestFriendship = async (friendId: string) => {
+    if (!friendId) return;
     try {
-      await requestFriendship({
+      const { data } = await requestFriendship({
         variables: {
           friendId,
         },
       });
-    } catch (error) {}
+
+      if (data?.requestFriendship.error) {
+        toast.error(data?.requestFriendship.error);
+        return refetch();
+      }
+
+      toast.success("Friendship requested!");
+      refetch();
+    } catch (error) {
+      toast.error("There was an error. Please try again.");
+      console.log("onRequestFriendship error", error);
+    }
   };
 
   return (
     <HStack spacing={["0", "0", "10"]} mt="5">
       <SkeletionProfileCard />
-      <Box bg="gray.900" width="100%" border="3px solid #B73CF1" px="6" py="10" borderRadius="xl">
-        {!!data ? (
-          <>
-            <Center>
-              <Avatar size="2xl" name="Segun Adebayo" src={data.getUser.image}>
-                <AvatarBadge boxSize="1em" bg="green.500" />
-              </Avatar>
-            </Center>
+      <Box
+        bg="gray.900"
+        height={500}
+        width="100%"
+        border="3px solid #B73CF1"
+        px="6"
+        py="10"
+        borderRadius="xl"
+        boxShadow={"0 0 12px #B73CF1"}
+      >
+        <Flex height={"full"} flexDir={"column"} alignItems={"center"} textAlign={"center"}>
+          {loading && (
+            <>
+              <SkeletonCircle startColor="gray.100" endColor="gray.600" size="14" mx="auto" />
+              <SkeletonText
+                startColor="gray.500"
+                mt="4"
+                noOfLines={3}
+                spacing="4"
+                skeletonHeight="2"
+              />
+              <Skeleton w="24" height="25px" mx="auto" mt="5" />
+            </>
+          )}
+          {!!data?.getUser ? (
+            <>
+              <Center>
+                <Avatar size="xl" name="Segun Adebayo" src={data.getUser.image}>
+                  <AvatarBadge boxSize="1em" bg="green.500" />
+                </Avatar>
+              </Center>
 
-            <Heading as="h1" size="xl" noOfLines={1} textAlign="center" mt="5">
-              {data.getUser.username}
-            </Heading>
+              <Heading as="h1" size="md" noOfLines={1} textAlign="center" mt="5">
+                {data.getUser.username}
+              </Heading>
 
-            <Text textAlign="center" mt="2">
-              Building @chakra-ui ⚡️. Design Systems and UI Engineer
-            </Text>
+              <Text textAlign="center" mt="2">
+                Building @chakra-ui ⚡️. Design Systems and UI Engineer
+              </Text>
 
-            <HStack justifyContent="center" mt="5" spacing="5">
-              <Icon as={FaReact} size="md" fontSize="3xl" />
-              <Icon as={SiJavascript} size="md" fontSize="3xl" />
-            </HStack>
+              <HStack justifyContent="center" mt="5" spacing="5">
+                <Icon as={FaReact} size="md" fontSize="3xl" />
+                <Icon as={SiJavascript} size="md" fontSize="3xl" />
+              </HStack>
 
-            <Text textAlign="center" color="gray.600" fontSize="sm" mt="10">
-              “Always ready to help, just contact me.”
-            </Text>
+              <Text textAlign="center" color="gray.600" fontSize="sm" mt="10">
+                “Always ready to help, just contact me.”
+              </Text>
 
-            <HStack justifyContent="center" mt="10">
-              <Button variant="solid" p={8} borderColor="#B73CF1" color="#B73CF1">
-                Cancel
-              </Button>
-              <Button
-                leftIcon={<BsGithub />}
-                variant="solid"
-                p={8}
-                color="white"
-                bgColor="#B73CF1"
-                borderColor="#B73CF1"
-                isLoading={requestFriendshipLoading}
-                onClick={() => onRequestFriendshipClick(data.getUser.id)}
-              >
-                Connect
-              </Button>
-            </HStack>
-          </>
-        ) : (
-          <>
-            <SkeletonCircle startColor="gray.100" endColor="gray.600" size="14" mx="auto" />
-            <SkeletonText
-              startColor="gray.500"
-              mt="4"
-              noOfLines={3}
-              spacing="4"
-              skeletonHeight="2"
-            />
-            <Skeleton w="24" height="25px" mx="auto" mt="5" />
-          </>
-        )}
+              <HStack justifyContent="center" mt="10">
+                <Button variant="solid" p={8} borderColor="#B73CF1" color="#B73CF1">
+                  Cancel
+                </Button>
+                <Button
+                  leftIcon={<BsGithub />}
+                  variant="solid"
+                  p={8}
+                  color="white"
+                  bgColor="#B73CF1"
+                  borderColor="#B73CF1"
+                  isLoading={requestFriendshipLoading}
+                  onClick={() => onRequestFriendship(data.getUser.id)}
+                >
+                  Connect
+                </Button>
+              </HStack>
+            </>
+          ) : (
+            <Text>No other users available at the moment. Please try again later.</Text>
+          )}
+        </Flex>
       </Box>
       <SkeletionProfileCard />
     </HStack>

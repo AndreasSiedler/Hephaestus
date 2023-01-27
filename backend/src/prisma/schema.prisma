@@ -59,6 +59,20 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model Friendship {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(name: "friends", fields: [userId], references: [id])
+  friendId  String
+  friend    User     @relation(name: "friendsOf", fields: [friendId], references: [id])
+  status    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, friendId])
+  @@index([friendId])
+}
+
 model Conversation {
   id              String                    @id @default(cuid())
   messages        Message[]
@@ -96,18 +110,4 @@ model Message {
 
   @@index([conversationId])
   @@index([senderId])
-}
-
-model Friendship {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(name: "friends", fields: [userId], references: [id])
-  friendId  String
-  friend    User     @relation(name: "friendsOf", fields: [friendId], references: [id])
-  status    Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, friendId])
-  @@index([friendId])
 }

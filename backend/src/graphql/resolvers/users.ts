@@ -12,18 +12,34 @@ const resolvers = {
       }
 
       const {
-        user: { username: myUsername },
+        user: { id: myUserId, username: myUsername },
       } = session;
 
       try {
+        /**
+         * Get random user which is not a friend already
+         */
         const user = await prisma.user.findFirst({
           where: {
             username: {
               not: myUsername,
             },
+            friendsOf: {
+              none: {
+                friendId: {
+                  not: myUserId,
+                },
+              },
+            },
+            friends: {
+              every: {
+                friendId: {
+                  not: myUserId,
+                },
+              },
+            },
           },
         });
-        console.log(user);
 
         return user;
       } catch (error: any) {

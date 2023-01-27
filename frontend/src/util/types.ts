@@ -98,3 +98,16 @@ export interface ConversationDeletedData {
     id: string;
   };
 }
+
+/**
+ *  Friendships
+ */
+export interface RequestFriendshipVariables {
+  friendId: string;
+}
+export interface RequestFriendshipData {
+  requestFriendship: {
+    success: boolean;
+    error: string;
+  };
+}

@@ -7,6 +7,7 @@ import theme from "../theme/theme";
 import { SessionProvider } from "next-auth/react";
 import { ApolloProvider } from "@apollo/client";
 import { client } from "../graphql/apollo-client";
+import { Toaster } from "react-hot-toast";
 
 export type CustomPageProps = {
   hideHeader?: boolean;
@@ -26,6 +27,7 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
       <SessionProvider session={pageProps.session}>
         <ChakraProvider resetCSS theme={theme}>
           <Component {...pageProps} />
+          <Toaster />
         </ChakraProvider>
       </SessionProvider>
     </ApolloProvider>
