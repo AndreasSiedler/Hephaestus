@@ -17,7 +17,6 @@
     "@fontsource/roboto-mono": "^4.5.8",
     "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.8.0",
-    "apollo-server-micro": "^3.11.1",
     "axios": "^1.2.2",
     "bson": "^4.7.2",
     "chakra-ui-steps": "^1.8.0",

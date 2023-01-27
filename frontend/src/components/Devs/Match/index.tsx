@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import {
   Avatar,
   AvatarBadge,
@@ -20,6 +20,7 @@ import { FaReact } from "react-icons/fa";
 import { SiJavascript } from "react-icons/si";
 import { GetUserData } from "../../../util/types";
 import UserOperations from "../../../graphql/operations/users";
+import FriendshipOperations from "../../../graphql/operations/friendships";
 
 interface DevMatchProps {
   session: Session;
@@ -27,6 +28,20 @@ interface DevMatchProps {
 
 const DevMatch: React.FC<DevMatchProps> = ({ session }) => {
   const { data, loading } = useQuery<GetUserData>(UserOperations.Queries.getUser);
+  const [requestFriendship, { loading: requestFriendshipLoading }] = useMutation<
+    { success: boolean; error: string },
+    { friendId: string }
+  >(FriendshipOperations.Mutations.requestFriendship);
+
+  const onRequestFriendshipClick = async (friendId: string) => {
+    try {
+      await requestFriendship({
+        variables: {
+          friendId,
+        },
+      });
+    } catch (error) {}
+  };
 
   return (
     <HStack spacing={["0", "0", "10"]} mt="5">
@@ -68,6 +83,8 @@ const DevMatch: React.FC<DevMatchProps> = ({ session }) => {
                 color="white"
                 bgColor="#B73CF1"
                 borderColor="#B73CF1"
+                isLoading={requestFriendshipLoading}
+                onClick={() => onRequestFriendshipClick(data.getUser.id)}
               >
                 Connect
               </Button>
