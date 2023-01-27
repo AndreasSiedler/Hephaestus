@@ -14,6 +14,15 @@ export interface CreateUsernameData {
   };
 }
 
+export interface GetUserData {
+  getUser: {
+    id: string;
+    username: string;
+    name: string;
+    image: string;
+  };
+}
+
 export interface SearchUsersInputs {
   username: string;
 }

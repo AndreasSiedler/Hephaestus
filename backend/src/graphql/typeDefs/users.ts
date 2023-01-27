@@ -6,9 +6,12 @@ const typeDefs = gql`
   type User {
     id: String
     username: String
+    name: String
+    image: String
   }
 
   type Query {
+    getUser: User
     searchUsers(username: String!): [User]
   }
 

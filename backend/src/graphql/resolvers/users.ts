@@ -5,6 +5,32 @@ import { CreateUsernameResponse, GraphQLContext } from "../../util/types";
 
 const resolvers = {
   Query: {
+    getUser: async function getUser(_: any, args: { username: string }, context: GraphQLContext) {
+      const { prisma, session } = context;
+      if (!session?.user) {
+        throw new GraphQLError("Not authorized");
+      }
+
+      const {
+        user: { username: myUsername },
+      } = session;
+
+      try {
+        const user = await prisma.user.findFirst({
+          where: {
+            username: {
+              not: myUsername,
+            },
+          },
+        });
+        console.log(user);
+
+        return user;
+      } catch (error: any) {
+        console.log("error", error);
+        throw new GraphQLError(error?.message);
+      }
+    },
     searchUsers: async function searchUsers(
       _: any,
       args: { username: string },
