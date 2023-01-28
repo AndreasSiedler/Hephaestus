@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import axios from "axios";
 import { GraphQLError } from "graphql";
 import { GraphQLContext } from "../../util/types";
 
@@ -134,7 +135,6 @@ const resolvers = {
             },
           },
         });
-        console.log(friendship);
 
         /**
          * Update Friendship status
@@ -151,21 +151,49 @@ const resolvers = {
             id: friendshipId,
           },
           data: {
-            status: false,
+            status: true,
           },
         });
-
-        return {
-          success: true,
-        };
 
         /**
          * Make github follow request for both users
          */
+        const {
+          user: { username, accounts },
+          friend: { username: myUsername, accounts: myAccounts },
+        } = friendship;
 
-        // const res = await fetch(
-        //   `https://api.github.com/user/following/${friendship?.user.username}`
-        // );
+        //
+        const headers = {
+          Accept: "application/vnd.github+json",
+          Authorization: `Bearer ${myAccounts[0].access_token}`,
+          "X-GitHub-Api-Version": "2022-11-28",
+        };
+
+        await axios.put(
+          `https://api.github.com/user/following/${username}`,
+          {},
+          { headers: headers }
+        );
+
+        const headersFriend = {
+          Accept: "application/vnd.github+json",
+          Authorization: `Bearer ${accounts[0].access_token}`,
+          "X-GitHub-Api-Version": "2022-11-28",
+        };
+
+        await axios.put(
+          `https://api.github.com/user/following/${myUsername}`,
+          {},
+          { headers: headersFriend }
+        );
+
+        /**
+         * Response
+         */
+        return {
+          success: true,
+        };
       } catch (error: any) {
         console.log("acceptFriendship error", error);
         throw new GraphQLError(error.message);

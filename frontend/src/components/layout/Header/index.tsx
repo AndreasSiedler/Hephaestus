@@ -1,10 +1,4 @@
-import {
-  ChatIcon,
-  ChevronDownIcon,
-  CloseIcon,
-  HamburgerIcon,
-  SettingsIcon,
-} from "@chakra-ui/icons";
+import { ChevronDownIcon, CloseIcon, HamburgerIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   AvatarBadge,
@@ -13,15 +7,14 @@ import {
   Collapse,
   Flex,
   Heading,
-  HStack,
   Icon,
   IconButton,
   Link,
   Menu,
   MenuButton,
   MenuDivider,
-  MenuItem,
   MenuList,
+  SimpleGrid,
   SkeletonText,
   Stack,
   Text,
@@ -104,15 +97,17 @@ export default function Header() {
                   />
                 </Box>
                 <MenuDivider />
-                <HStack px={5}>
+                <SimpleGrid px={5} columns={2} spacing={3}>
                   <Button variant={"ghost"} w={"full"} onClick={onFriendsClick}>
                     Friends
                   </Button>
-                  <Button variant={"ghost"} w={"full"} onClick={() => signOut()}>
+                  <Button variant={"ghost"} w={"full"}>
                     Messages
                   </Button>
-                  {/* <MenuItem onClick={() => signOut()}>Logout</MenuItem> */}
-                </HStack>
+                  <Button variant={"ghost"} w={"full"} onClick={() => signOut()}>
+                    Logout
+                  </Button>
+                </SimpleGrid>
               </MenuList>
             </Menu>
           </Flex>
