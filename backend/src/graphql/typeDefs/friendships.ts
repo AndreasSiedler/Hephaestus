@@ -17,6 +17,7 @@ const typeDefs = gql`
   type Mutation {
     requestFriendship(friendId: String): RequestFriendshipResponse
     acceptFriendship(friendshipId: String): AcceptFriendshipResponse
+    cancelFriendship(friendshipId: String): CancelFriendshipResponse
   }
 
   type RequestFriendshipResponse {
@@ -25,6 +26,11 @@ const typeDefs = gql`
   }
 
   type AcceptFriendshipResponse {
+    success: Boolean
+    error: String
+  }
+
+  type CancelFriendshipResponse {
     success: Boolean
     error: String
   }

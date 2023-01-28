@@ -1,4 +1,5 @@
-import { Avatar, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
+import { Avatar, Button, Flex, Heading, IconButton, Text } from "@chakra-ui/react";
 import { FaGithub } from "react-icons/fa";
 import { Friendship, Session } from "../../util/types";
 
@@ -6,20 +7,25 @@ interface FriendshipItemProps {
   session: Session;
   friendship: Friendship;
   loading: boolean;
+  cancelFriendshipLoading: boolean;
   onAcceptFriendship: (friendshipId: string) => void;
+  onCancelFriendship: (friendshipId: string) => void;
 }
 
 const FriendshipItem: React.FC<FriendshipItemProps> = ({
   session,
   friendship,
   loading,
+  cancelFriendshipLoading,
   onAcceptFriendship,
+  onCancelFriendship,
 }) => {
+  console.log(friendship);
   const {
     user: { id: myUserId },
   } = session;
 
-  const { friend, user } = friendship;
+  const { id: friendshipId, friend, user } = friendship;
   const myFriend = friend.id !== myUserId ? friend : user;
 
   return (
@@ -34,7 +40,16 @@ const FriendshipItem: React.FC<FriendshipItemProps> = ({
         </Flex>
       </Flex>
       {friendship.status ? (
-        <Button>Message</Button>
+        <Flex>
+          <Button>Message</Button>
+          <IconButton
+            ml={1}
+            icon={<DeleteIcon />}
+            aria-label={"Cancel friendship"}
+            isLoading={cancelFriendshipLoading}
+            onClick={() => onCancelFriendship(friendshipId)}
+          />
+        </Flex>
       ) : (
         <Button
           ml={5}
@@ -43,7 +58,7 @@ const FriendshipItem: React.FC<FriendshipItemProps> = ({
           bg={"#B73CF1"}
           px={10}
           isLoading={loading}
-          onClick={() => onAcceptFriendship(friendship.id)}
+          onClick={() => onAcceptFriendship(friendshipId)}
         >
           Accept
         </Button>

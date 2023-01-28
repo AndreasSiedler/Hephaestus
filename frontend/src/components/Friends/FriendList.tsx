@@ -6,14 +6,18 @@ interface FriendListProps {
   session: Session;
   friends: Array<Friendship>;
   loading: boolean;
+  cancelFriendshipLoading: boolean;
   onAcceptFriendship: (friendshipId: string) => void;
+  onCancelFriendship: (friendshipId: string) => void;
 }
 
 const FriendList: React.FC<FriendListProps> = ({
   session,
   friends,
   loading,
+  cancelFriendshipLoading,
   onAcceptFriendship,
+  onCancelFriendship,
 }) => {
   return (
     <VStack mt={5} spacing={5} divider={<StackDivider />}>
@@ -24,7 +28,9 @@ const FriendList: React.FC<FriendListProps> = ({
             session={session}
             friendship={friendship}
             loading={loading}
+            cancelFriendshipLoading={cancelFriendshipLoading}
             onAcceptFriendship={onAcceptFriendship}
+            onCancelFriendship={onCancelFriendship}
           />
         ))}
     </VStack>

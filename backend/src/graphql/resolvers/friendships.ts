@@ -217,7 +217,6 @@ const resolvers = {
           friend: { username: myUsername, accounts: myAccounts },
         } = friendship;
 
-        //
         const headers = {
           Accept: "application/vnd.github+json",
           Authorization: `Bearer ${myAccounts[0].access_token}`,
@@ -250,6 +249,108 @@ const resolvers = {
         };
       } catch (error: any) {
         console.log("acceptFriendship error", error);
+        throw new GraphQLError(error.message);
+      }
+    },
+    cancelFriendship: async (_: any, args: { friendshipId: string }, context: GraphQLContext) => {
+      const { friendshipId } = args;
+      const { prisma, session } = context;
+
+      if (!session?.user) {
+        return new GraphQLError("Not authorized");
+      }
+
+      const {
+        user: { id: myUserId },
+      } = session;
+
+      try {
+        /**
+         * Get friendship with user and friend
+         * Poulate with account 'github' access token to execute the following requests later
+         */
+        const friendship = await prisma.friendship.findUnique({
+          where: {
+            id: friendshipId,
+          },
+          include: {
+            user: {
+              select: {
+                username: true,
+                accounts: {
+                  select: {
+                    access_token: true,
+                  },
+                },
+              },
+            },
+            friend: {
+              select: {
+                username: true,
+                accounts: {
+                  select: {
+                    access_token: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        /**
+         * Delete Friendship
+         * Check first if this friendship is owned by you
+         * Then delete the friendship
+         */
+        if (friendship?.friendId !== myUserId && friendship?.userId !== myUserId) {
+          return {
+            success: false,
+            error: "You are not allowed to delete this friendship",
+          };
+        }
+
+        await prisma.friendship.delete({
+          where: {
+            id: friendshipId,
+          },
+        });
+
+        /**
+         * Make github follow delete request for both users
+         */
+        const {
+          user: { username, accounts },
+          friend: { username: myUsername, accounts: myAccounts },
+        } = friendship;
+
+        const headers = {
+          Accept: "application/vnd.github+json",
+          Authorization: `Bearer ${myAccounts[0].access_token}`,
+          "X-GitHub-Api-Version": "2022-11-28",
+        };
+
+        await axios.delete(`https://api.github.com/user/following/${username}`, {
+          headers: headers,
+        });
+
+        const headersFriend = {
+          Accept: "application/vnd.github+json",
+          Authorization: `Bearer ${accounts[0].access_token}`,
+          "X-GitHub-Api-Version": "2022-11-28",
+        };
+
+        await axios.delete(`https://api.github.com/user/following/${myUsername}`, {
+          headers: headersFriend,
+        });
+
+        /**
+         * Response
+         */
+        return {
+          success: true,
+        };
+      } catch (error: any) {
+        console.log("cancelFriendship error", error);
         throw new GraphQLError(error.message);
       }
     },

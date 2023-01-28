@@ -134,6 +134,16 @@ export interface AcceptFriendshipData {
     error: string;
   };
 }
+export interface CancelFriendshipVariables {
+  friendshipId: string;
+}
+
+export interface CancelFriendshipData {
+  cancelFriendship: {
+    success: boolean;
+    error: string;
+  };
+}
 
 export interface FriendshipUserPopulated {
   id: string;

@@ -5,6 +5,7 @@ export default {
     friendships: gql`
       query Friendships {
         friendships {
+          id
           user {
             id
             username
@@ -51,6 +52,14 @@ export default {
     acceptFriendship: gql`
       mutation AcceptFriendship($friendshipId: String!) {
         acceptFriendship(friendshipId: $friendshipId) {
+          success
+          error
+        }
+      }
+    `,
+    cancelFriendship: gql`
+      mutation CancelFriendship($friendshipId: String!) {
+        cancelFriendship(friendshipId: $friendshipId) {
           success
           error
         }
