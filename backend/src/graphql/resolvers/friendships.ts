@@ -89,6 +89,88 @@ const resolvers = {
         throw new GraphQLError(error.message);
       }
     },
+    acceptFriendship: async (_: any, args: { friendshipId: string }, context: GraphQLContext) => {
+      const { friendshipId } = args;
+      const { prisma, session } = context;
+
+      if (!session?.user) {
+        return new GraphQLError("Not authorized");
+      }
+
+      const {
+        user: { id: myUserId },
+      } = session;
+
+      try {
+        /**
+         * Get friendship with user and friend
+         */
+        const friendship = await prisma.friendship.findUnique({
+          where: {
+            id: friendshipId,
+          },
+          include: {
+            user: {
+              select: {
+                username: true,
+                accounts: {
+                  select: {
+                    access_token: true,
+                    scope: true,
+                  },
+                },
+              },
+            },
+            friend: {
+              select: {
+                username: true,
+                accounts: {
+                  select: {
+                    access_token: true,
+                    scope: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+        console.log(friendship);
+
+        /**
+         * Update Friendship status
+         */
+        if (friendship?.friendId !== myUserId) {
+          return {
+            success: false,
+            error: "You are not allowed to accept this friendship",
+          };
+        }
+
+        await prisma.friendship.update({
+          where: {
+            id: friendshipId,
+          },
+          data: {
+            status: false,
+          },
+        });
+
+        return {
+          success: true,
+        };
+
+        /**
+         * Make github follow request for both users
+         */
+
+        // const res = await fetch(
+        //   `https://api.github.com/user/following/${friendship?.user.username}`
+        // );
+      } catch (error: any) {
+        console.log("acceptFriendship error", error);
+        throw new GraphQLError(error.message);
+      }
+    },
   },
 };
 

@@ -4,12 +4,20 @@ import FriendListItem from "./FrindListItem";
 
 interface FriendListProps {
   friends: Array<Friendship>;
+  onAcceptFriendship: (friendshipId: string) => void;
 }
 
-const FriendList: React.FC<FriendListProps> = ({ friends }) => {
+const FriendList: React.FC<FriendListProps> = ({ friends, onAcceptFriendship }) => {
   return (
     <VStack mt={5} spacing={5} divider={<StackDivider />}>
-      {!!friends && friends.map((friend) => <FriendListItem key={friend.id} friend={friend} />)}
+      {!!friends &&
+        friends.map((friendship) => (
+          <FriendListItem
+            key={friendship.id}
+            friendship={friendship}
+            onAcceptFriendship={onAcceptFriendship}
+          />
+        ))}
     </VStack>
   );
 };

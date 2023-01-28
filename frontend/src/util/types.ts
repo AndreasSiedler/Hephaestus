@@ -112,6 +112,17 @@ export interface RequestFriendshipData {
   };
 }
 
+export interface AcceptFriendshipVariables {
+  friendshipId: string;
+}
+
+export interface AcceptFriendshipData {
+  acceptFriendship: {
+    success: boolean;
+    error: string;
+  };
+}
+
 export interface FriendshipUserPopulated {
   id: string;
   username: string;

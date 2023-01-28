@@ -14,9 +14,15 @@ const typeDefs = gql`
 
   type Mutation {
     requestFriendship(friendId: String): RequestFriendshipResponse
+    acceptFriendship(friendshipId: String): AcceptFriendshipResponse
   }
 
   type RequestFriendshipResponse {
+    success: Boolean
+    error: String
+  }
+
+  type AcceptFriendshipResponse {
     success: Boolean
     error: String
   }
