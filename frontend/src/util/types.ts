@@ -111,3 +111,21 @@ export interface RequestFriendshipData {
     error: string;
   };
 }
+
+export interface FriendshipUserPopulated {
+  id: string;
+  username: string;
+  name: string;
+  image: string;
+}
+
+export interface Friendship {
+  id: string;
+  status: boolean;
+  user: FriendshipUserPopulated;
+  createdAt: string;
+}
+
+export interface GetWaitingFriendshipsData {
+  getWaitingFriendships: Array<Friendship>;
+}

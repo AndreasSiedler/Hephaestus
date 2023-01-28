@@ -3,15 +3,12 @@ import React from "react";
 
 interface SkeletonLoaderProps {
   count: number;
-  height: string;
-  width: string;
+  height: number | string;
+  width: number | string;
+  spacing?: number;
 }
 
-const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
-  count,
-  height,
-  width,
-}) => {
+const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({ count, height, width, spacing }) => {
   return (
     <>
       {[...Array(count)].map((_, i) => (
@@ -22,6 +19,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
           height={height}
           width={width}
           borderRadius={4}
+          mt={spacing}
         />
       ))}
     </>

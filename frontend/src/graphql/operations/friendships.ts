@@ -1,7 +1,23 @@
 import { gql } from "@apollo/client";
 
 export default {
-  Queries: {},
+  Queries: {
+    getFriendships: gql`
+      query GetWaitingFriendships {
+        getWaitingFriendships {
+          id
+          user {
+            id
+            username
+            name
+            image
+          }
+          status
+          createdAt
+        }
+      }
+    `,
+  },
   Mutations: {
     requestFriendship: gql`
       mutation RequestFriendship($friendId: String) {

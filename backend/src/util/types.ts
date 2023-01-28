@@ -1,10 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { PubSub } from "graphql-subscriptions";
 import { Context } from "graphql-ws/lib/server";
-import {
-  conversationPopulated,
-  participantPopulated,
-} from "../graphql/resolvers/conversations";
+import { conversationPopulated, participantPopulated } from "../graphql/resolvers/conversations";
 import { messagePopulated } from "../graphql/resolvers/messages";
 
 /**
