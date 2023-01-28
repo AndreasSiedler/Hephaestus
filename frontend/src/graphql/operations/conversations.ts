@@ -35,10 +35,7 @@ export default {
       }
     `,
     markConversationAsRead: gql`
-      mutation MarkConversationAsRead(
-        $userId: String!
-        $conversationId: String!
-      ) {
+      mutation MarkConversationAsRead($userId: String!, $conversationId: String!) {
         markConversationAsRead(userId: $userId, conversationId: $conversationId)
       }
     `,
@@ -48,14 +45,8 @@ export default {
       }
     `,
     updateParticipants: gql`
-      mutation UpdateParticipants(
-        $conversationId: String!
-        $participantIds: [String]!
-      ) {
-        updateParticipants(
-          conversationId: $conversationId
-          participantIds: $participantIds
-        )
+      mutation UpdateParticipants($conversationId: String!, $participantIds: [String]!) {
+        updateParticipants(conversationId: $conversationId, participantIds: $participantIds)
       }
     `,
   },

@@ -4,11 +4,13 @@ const typeDefs = gql`
   type Friendship {
     id: String
     user: User
+    friend: User
     status: Boolean
     createdAt: Date
   }
 
   type Query {
+    friendships: [Friendship]
     waitingFriendships: [Friendship]
   }
 

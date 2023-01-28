@@ -2,6 +2,27 @@ import { gql } from "@apollo/client";
 
 export default {
   Queries: {
+    friendships: gql`
+      query Friendships {
+        friendships {
+          user {
+            id
+            username
+            name
+            image
+          }
+          friend {
+            id
+            username
+            name
+            image
+          }
+          status
+          createdAt
+        }
+      }
+    `,
+
     waitingFriendships: gql`
       query WaitingFriendships {
         waitingFriendships {

@@ -1,6 +1,18 @@
 import { ConversationPopulated, MessagePopulated } from "../../../backend/src/util/types";
 
 /**
+ * Next Auth
+ */
+export interface Session {
+  user: User;
+}
+
+export interface User {
+  id: string;
+  username: string;
+}
+
+/**
  * Users
  */
 export interface CreateUsernameVariables {
@@ -134,7 +146,12 @@ export interface Friendship {
   id: string;
   status: boolean;
   user: FriendshipUserPopulated;
+  friend: FriendshipUserPopulated;
   createdAt: string;
+}
+
+export interface FriedshipsData {
+  friendships: Array<Friendship>;
 }
 
 export interface WaitingFriendshipsData {

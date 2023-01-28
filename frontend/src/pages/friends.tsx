@@ -12,7 +12,7 @@ const Friends: React.FC = () => {
     <Layout title="Bittstorm - Schaffe Platz für Neues">
       <Container maxW={"container.lg"} px={10} py={5}>
         <Header />
-        {session && <FriendsWrapper />}
+        {session && <FriendsWrapper session={session} />}
       </Container>
     </Layout>
   );

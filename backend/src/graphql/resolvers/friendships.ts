@@ -5,6 +5,57 @@ import { GraphQLContext } from "../../util/types";
 
 const resolvers = {
   Query: {
+    friendships: async (_: any, __: any, context: GraphQLContext) => {
+      const { prisma, session } = context;
+
+      if (!session?.user) {
+        throw new GraphQLError("Not authorized");
+      }
+
+      const {
+        user: { id: myUserId },
+      } = session;
+
+      try {
+        const friendships = await prisma.friendship.findMany({
+          where: {
+            OR: [
+              {
+                friendId: myUserId,
+                status: true,
+              },
+              {
+                userId: myUserId,
+                status: true,
+              },
+            ],
+          },
+          include: {
+            friend: {
+              select: {
+                id: true,
+                username: true,
+                name: true,
+                image: true,
+              },
+            },
+            user: {
+              select: {
+                id: true,
+                username: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
+        });
+
+        return friendships;
+      } catch (error: any) {
+        console.log("friendships error", error);
+        throw new GraphQLError(error.message);
+      }
+    },
     waitingFriendships: async (_: any, __: any, context: GraphQLContext) => {
       const { prisma, session } = context;
 
@@ -27,7 +78,7 @@ const resolvers = {
 
         return waitingFriendships;
       } catch (error: any) {
-        console.log("getWaitingFriendships error", error);
+        console.log("waitingFriendships error", error);
         throw new GraphQLError(error.message);
       }
     },
