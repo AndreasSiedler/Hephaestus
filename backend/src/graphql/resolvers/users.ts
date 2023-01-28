@@ -26,16 +26,12 @@ const resolvers = {
             },
             friendsOf: {
               none: {
-                friendId: {
-                  not: myUserId,
-                },
+                userId: myUserId,
               },
             },
             friends: {
-              every: {
-                friendId: {
-                  not: myUserId,
-                },
+              none: {
+                friendId: myUserId,
               },
             },
           },

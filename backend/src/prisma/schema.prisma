@@ -70,6 +70,7 @@ model Friendship {
   updatedAt DateTime @updatedAt
 
   @@unique([userId, friendId])
+  @@unique([friendId, userId])
   @@index([friendId])
 }
 

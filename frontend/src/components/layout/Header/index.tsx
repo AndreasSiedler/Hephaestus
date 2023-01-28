@@ -1,16 +1,28 @@
-import { ChevronDownIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import {
+  ChatIcon,
+  ChevronDownIcon,
+  CloseIcon,
+  HamburgerIcon,
+  SettingsIcon,
+} from "@chakra-ui/icons";
 import {
   Avatar,
+  AvatarBadge,
+  Box,
   Button,
   Collapse,
   Flex,
+  Heading,
+  HStack,
   Icon,
   IconButton,
   Link,
   Menu,
   MenuButton,
+  MenuDivider,
   MenuItem,
   MenuList,
+  SkeletonText,
   Stack,
   Text,
   useBreakpointValue,
@@ -18,11 +30,17 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { BsGithub } from "react-icons/bs";
 
 export default function Header() {
+  const router = useRouter();
   const { isOpen, onToggle } = useDisclosure();
   const session = useSession();
+
+  const onFriendsClick = () => {
+    router.push("/friends");
+  };
 
   return (
     <>
@@ -58,10 +76,43 @@ export default function Header() {
           <Flex alignItems={"center"}>
             <Menu>
               <MenuButton as={Button} rounded={"full"} variant={"link"} cursor={"pointer"} minW={0}>
-                <Avatar size={"sm"} src={session.data?.user?.image ?? undefined} />
+                <Avatar size={"sm"} src={session.data?.user?.image ?? undefined}>
+                  <AvatarBadge bg="#B73CF1" boxSize={6}>
+                    <Text fontWeight={"bold"}>6</Text>
+                  </AvatarBadge>
+                </Avatar>
               </MenuButton>
-              <MenuList>
-                <MenuItem onClick={() => signOut()}>Logout</MenuItem>
+              <MenuList width={400}>
+                <Flex px={5} justifyContent={"space-between"} alignItems={"center"}>
+                  <Heading size={"sm"}>Notifications</Heading>
+                  <IconButton icon={<SettingsIcon />} aria-label={"Settings"} />
+                </Flex>
+                <Box px={5} mt={5}>
+                  <SkeletonText
+                    startColor="gray.500"
+                    pb="8"
+                    noOfLines={3}
+                    spacing="4"
+                    skeletonHeight="2"
+                  />
+                  <SkeletonText
+                    startColor="gray.500"
+                    pb="4"
+                    noOfLines={3}
+                    spacing="4"
+                    skeletonHeight="2"
+                  />
+                </Box>
+                <MenuDivider />
+                <HStack px={5}>
+                  <Button variant={"ghost"} w={"full"} onClick={onFriendsClick}>
+                    Friends
+                  </Button>
+                  <Button variant={"ghost"} w={"full"} onClick={() => signOut()}>
+                    Messages
+                  </Button>
+                  {/* <MenuItem onClick={() => signOut()}>Logout</MenuItem> */}
+                </HStack>
               </MenuList>
             </Menu>
           </Flex>

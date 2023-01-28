@@ -21,8 +21,16 @@ const resolvers = {
          */
         const existingFriendship = await prisma.friendship.findFirst({
           where: {
-            userId: myUserId,
-            friendId: friendId,
+            OR: [
+              {
+                userId: myUserId,
+                friendId: friendId,
+              },
+              {
+                userId: friendId,
+                friendId: myUserId,
+              },
+            ],
           },
         });
         if (existingFriendship) {
