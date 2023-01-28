@@ -9,7 +9,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    getWaitingFriendships: [Friendship]
+    waitingFriendships: [Friendship]
   }
 
   type Mutation {

@@ -4,8 +4,7 @@ import { GraphQLContext } from "../../util/types";
 
 const resolvers = {
   Query: {
-    getWaitingFriendships: async (_: any, args: { friendId: string }, context: GraphQLContext) => {
-      console.log("Hello from the server");
+    waitingFriendships: async (_: any, __: any, context: GraphQLContext) => {
       const { prisma, session } = context;
 
       if (!session?.user) {

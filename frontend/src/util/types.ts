@@ -126,6 +126,6 @@ export interface Friendship {
   createdAt: string;
 }
 
-export interface GetWaitingFriendshipsData {
-  getWaitingFriendships: Array<Friendship>;
+export interface WaitingFriendshipsData {
+  waitingFriendships: Array<Friendship>;
 }
