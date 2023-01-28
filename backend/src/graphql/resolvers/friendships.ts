@@ -105,6 +105,7 @@ const resolvers = {
       try {
         /**
          * Get friendship with user and friend
+         * Poulate with account 'github' access token to execute the following requests later
          */
         const friendship = await prisma.friendship.findUnique({
           where: {
@@ -138,6 +139,8 @@ const resolvers = {
 
         /**
          * Update Friendship status
+         * Check first if this friendship is addressed to you
+         * Then update the friendship with new status
          */
         if (friendship?.friendId !== myUserId) {
           return {
