@@ -94,6 +94,15 @@ export interface SearchedUser {
   username: string;
 }
 
+export interface UpdateUserData {
+  name: string;
+  email: string;
+  bio: string;
+  location: string;
+  blog: string;
+  status: string;
+}
+
 /**
  * Messages
  */

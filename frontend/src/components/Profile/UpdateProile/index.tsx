@@ -1,3 +1,4 @@
+import { useMutation } from "@apollo/client";
 import {
   Button,
   FormControl,
@@ -9,7 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { User } from "../../../util/types";
+import { UpdateUserData, User } from "../../../util/types";
+import UserOperations from "../../../graphql/operations/users";
 
 type IFormInput = {
   name: string;
@@ -25,18 +27,32 @@ interface ProfilePageProps {
 }
 
 const ProfileUpdate: React.FC<ProfilePageProps> = ({ user }) => {
+  const [updateUser, { loading: updateUserLoading }] = useMutation<UpdateUserData>(
+    UserOperations.Mutations.updateUser
+  );
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<IFormInput>({
     defaultValues: useMemo(() => {
-      return user;
+      return {
+        bio: user?.bio,
+        blog: user?.blog,
+        email: user?.email,
+        location: user?.location,
+        name: user?.name,
+        status: user?.status,
+      };
     }, []),
   });
 
   async function onSubmit(values: IFormInput) {
-    console.log(values);
+    try {
+      await updateUser({
+        variables: values,
+      });
+    } catch (error) {}
   }
 
   return (
@@ -125,7 +141,7 @@ const ProfileUpdate: React.FC<ProfilePageProps> = ({ user }) => {
           <FormErrorMessage>{errors.status && errors.status.message}</FormErrorMessage>
         </FormControl>
 
-        <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
+        <Button mt={4} colorScheme="teal" isLoading={updateUserLoading} type="submit">
           Finish
         </Button>
       </Stack>

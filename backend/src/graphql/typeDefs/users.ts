@@ -16,7 +16,31 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    updateUser(
+      name: String
+      email: String
+      bio: String
+      location: String
+      blog: String
+      status: String
+      syncGithub: Boolean
+    ): UpdateUserResponse
     createUsername(username: String!): CreateUsernameResponse
+  }
+
+  type UpdateUserInput {
+    name: String
+    email: String
+    bio: String
+    location: String
+    blog: String
+    status: String
+    syncGithub: Boolean
+  }
+
+  type UpdateUserResponse {
+    success: Boolean
+    error: String
   }
 
   type CreateUsernameResponse {

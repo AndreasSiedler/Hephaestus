@@ -1,4 +1,4 @@
-import { SettingsIcon } from "@chakra-ui/icons";
+import { ChatIcon, SettingsIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   AvatarBadge,
@@ -10,28 +10,23 @@ import {
   IconButton,
   Menu,
   MenuButton,
-  MenuDivider,
   MenuList,
   SimpleGrid,
   SkeletonText,
   Text,
   useBreakpointValue,
   useColorModeValue,
+  VStack,
 } from "@chakra-ui/react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { BsGithub } from "react-icons/bs";
+import { RxPerson } from "react-icons/rx";
 
 export default function Header() {
-  const router = useRouter();
   const session = useSession();
   const [pageLoading, setLoading] = useState(false);
-
-  const onFriendsClick = () => {
-    router.push("/friends");
-  };
 
   const onSignin = async () => {
     try {
@@ -69,8 +64,8 @@ export default function Header() {
         <Flex alignItems={"center"}>
           <Menu>
             <MenuButton as={Button} rounded={"full"} variant={"link"} cursor={"pointer"} minW={0}>
-              <Avatar size={"sm"} src={session.data?.user?.image ?? undefined}>
-                <AvatarBadge bg="#B73CF1" boxSize={6}>
+              <Avatar size={"md"} src={session.data?.user?.image ?? undefined}>
+                <AvatarBadge position={"absolute"} left={-5} bg="#B73CF1" boxSize={8}>
                   <Text fontWeight={"bold"}>6</Text>
                 </AvatarBadge>
               </Avatar>
@@ -98,17 +93,23 @@ export default function Header() {
                   skeletonHeight="2"
                 />
               </Box>
-              <MenuDivider />
-              <SimpleGrid px={5} columns={2} spacing={3}>
-                <Button variant={"ghost"} w={"full"} onClick={onFriendsClick}>
-                  Friends
-                </Button>
-                <Button variant={"ghost"} w={"full"}>
-                  Messages
-                </Button>
-                <Button variant={"ghost"} w={"full"} onClick={() => signOut()}>
-                  Logout
-                </Button>
+              <SimpleGrid px={5} columns={2} spacing={3} my={10}>
+                <NextLink href={"/chat"} shallow>
+                  <Button variant={"ghost"} w={"full"} h={20}>
+                    <VStack>
+                      <ChatIcon />
+                      <Box> Messages</Box>
+                    </VStack>
+                  </Button>
+                </NextLink>
+                <NextLink href={"/friends"} shallow>
+                  <Button variant={"ghost"} w={"full"} h={20}>
+                    <VStack>
+                      <Icon as={RxPerson} fontSize={"xl"} />
+                      <Box> Friends</Box>
+                    </VStack>
+                  </Button>
+                </NextLink>
               </SimpleGrid>
             </MenuList>
           </Menu>

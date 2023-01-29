@@ -83,6 +83,54 @@ const resolvers = {
     },
   },
   Mutation: {
+    updateUser: async function updateUser(
+      _: any,
+      args: {
+        name?: string;
+        email?: string;
+        bio?: string;
+        location?: string;
+        blog?: string;
+        status?: string;
+        syncGithub?: boolean;
+      },
+      context: GraphQLContext
+    ) {
+      const { session, prisma } = context;
+      const { name, email, bio, location, blog, status, syncGithub } = args;
+
+      if (!session?.user) {
+        return {
+          error: "Not authorized",
+        };
+      }
+
+      const {
+        user: { id: userId },
+      } = session;
+
+      try {
+        await prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            name: name,
+            email: email,
+            bio: bio,
+            location: location,
+            blog: blog,
+          },
+        });
+
+        return {
+          success: true,
+        };
+      } catch (error: any) {
+        console.log("updateUser error", error);
+        throw new GraphQLError(error?.message);
+      }
+    },
     createUsername: async function createUsername(
       _: any,
       args: { username: string },

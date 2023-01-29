@@ -22,6 +22,14 @@ export default {
     `,
   },
   Mutations: {
+    updateUser: gql`
+      mutation UpdateUser($name: String, $bio: String) {
+        updateUser(name: $name, bio: $bio) {
+          success
+          error
+        }
+      }
+    `,
     createUsername: gql`
       mutation CreateUsername($username: String!) {
         createUsername(username: $username) {
