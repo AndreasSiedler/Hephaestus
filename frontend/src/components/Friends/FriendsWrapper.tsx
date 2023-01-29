@@ -94,17 +94,17 @@ const FriendsWrapper: React.FC<FriendsWrapperProps> = ({ session }) => {
             onCancelFriendship={onCancelFriendship}
           />
           <Heading size={"lg"} as={"h2"}>
-            Waiting friends
+            Waiting friends ({waitingFriendships?.waitingFriendships.length})
           </Heading>
         </Box>
       )}
 
-      {waitingFriendshipsLoading ? (
+      {friendshipsLoading ? (
         <SkeletonLoader count={3} height={20} width={"full"} spacing={5} />
       ) : (
         <Box mt={10}>
           <Heading size={"lg"} as={"h2"} mt={10}>
-            My friends
+            My friends ({friendships?.friendships.length})
           </Heading>{" "}
           <FriendList
             session={session}

@@ -41,8 +41,7 @@ export default function Home({}: HomeProps) {
     <Layout title="Bittstorm - Schaffe Platz für Neues">
       <Container maxW={"container.lg"} px={10} py={5}>
         <Header />
-        <Center flexDir="column" mt="16">
-          <BsGithub size={40} />
+        <Center flexDir="column" mt={28}>
           <Heading as={"h1"}>Welcome to Gitbud</Heading>
           <Text maxW="md" textAlign="center" textColor="gray.500" mt={3}>
             The Dev community to connect, collaborate and to improve. Enjoy your stay”
@@ -89,6 +88,14 @@ function SkeletonFeature() {
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
 
+  if (session?.user) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/devs",
+      },
+    };
+  }
   return {
     props: {
       session,

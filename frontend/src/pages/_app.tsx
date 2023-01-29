@@ -1,13 +1,14 @@
-import React, { FC } from "react";
-import { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
+import { AppProps } from "next/app";
+import { FC } from "react";
 
-import "@fontsource/roboto-mono";
-import theme from "../theme/theme";
-import { SessionProvider } from "next-auth/react";
 import { ApolloProvider } from "@apollo/client";
-import { client } from "../graphql/apollo-client";
+import "@fontsource/roboto-mono";
+import { SessionProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
+import NextNProgress from "../components/layout/NextNProgress";
+import { client } from "../graphql/apollo-client";
+import theme from "../theme/theme";
 
 export type CustomPageProps = {
   hideHeader?: boolean;
@@ -26,6 +27,7 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
     <ApolloProvider client={client}>
       <SessionProvider session={pageProps.session}>
         <ChakraProvider resetCSS theme={theme}>
+          <NextNProgress />
           <Component {...pageProps} />
           <Toaster />
         </ChakraProvider>

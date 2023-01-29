@@ -16,17 +16,17 @@ import {
 } from "@chakra-ui/react";
 import { Session } from "next-auth";
 import React from "react";
+import { toast } from "react-hot-toast";
 import { BsGithub } from "react-icons/bs";
 import { FaReact } from "react-icons/fa";
 import { SiJavascript } from "react-icons/si";
+import FriendshipOperations from "../../../graphql/operations/friendships";
+import UserOperations from "../../../graphql/operations/users";
 import {
   GetUserData,
   RequestFriendshipData,
   RequestFriendshipVariables,
 } from "../../../util/types";
-import UserOperations from "../../../graphql/operations/users";
-import FriendshipOperations from "../../../graphql/operations/friendships";
-import { toast } from "react-hot-toast";
 
 interface DevMatchProps {
   session: Session;
@@ -114,9 +114,6 @@ const DevMatch: React.FC<DevMatchProps> = ({ session }) => {
               </Text>
 
               <HStack justifyContent="center" mt="10">
-                <Button variant="solid" p={8} borderColor="#B73CF1" color="#B73CF1">
-                  Cancel
-                </Button>
                 <Button
                   leftIcon={<BsGithub />}
                   variant="solid"
