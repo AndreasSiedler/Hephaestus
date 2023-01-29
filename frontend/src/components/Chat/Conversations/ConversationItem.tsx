@@ -1,13 +1,23 @@
-import { Avatar, Box, Flex, Menu, MenuItem, MenuList, Stack, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  AvatarGroup,
+  Box,
+  Flex,
+  Menu,
+  MenuItem,
+  MenuList,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { formatRelative } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import React, { useState } from "react";
+import { AiOutlineEdit } from "react-icons/ai";
+import { BiLogOut } from "react-icons/bi";
 import { GoPrimitiveDot } from "react-icons/go";
 import { MdDeleteOutline } from "react-icons/md";
-import { BiLogOut } from "react-icons/bi";
-import { AiOutlineEdit } from "react-icons/ai";
-import { formatUsernames } from "../../../util/functions";
 import { ConversationPopulated } from "../../../../../backend/src/util/types";
+import { formatUsernames } from "../../../util/functions";
 
 const formatRelativeLocale = {
   lastWeek: "eeee",
@@ -55,7 +65,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
       direction="row"
       align="center"
       justify="space-between"
-      p={4}
+      py={4}
       cursor="pointer"
       borderRadius={4}
       bg={conversation.id === selectedConversationId ? "whiteAlpha.200" : "none"}
@@ -103,10 +113,22 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
       <Flex position="absolute" left="-6px">
         {hasSeenLatestMessage === false && <GoPrimitiveDot fontSize={18} color="#6B46C1" />}
       </Flex>
-      <Avatar />
+      <AvatarGroup max={2}>
+        {conversation.participants &&
+          conversation.participants.map((participant) => {
+            if (participant.user.id === userId) return;
+            return <Avatar name={participant.user.username} />;
+          })}
+      </AvatarGroup>
       <Flex justify="space-between" width="80%" height="100%">
         <Flex direction="column" width="70%" height="100%">
-          <Text fontWeight={600} whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+          <Text
+            fontWeight={600}
+            fontSize={15}
+            whiteSpace="nowrap"
+            overflow="hidden"
+            textOverflow="ellipsis"
+          >
             {formatUsernames(conversation.participants, userId)}
           </Text>
           {conversation.latestMessage && (
@@ -116,6 +138,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
                 whiteSpace="nowrap"
                 overflow="hidden"
                 textOverflow="ellipsis"
+                fontSize={13}
               >
                 {conversation.latestMessage.body}
               </Text>

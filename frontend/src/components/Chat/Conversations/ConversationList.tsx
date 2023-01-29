@@ -1,27 +1,19 @@
 import { useMutation } from "@apollo/client";
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { Session } from "next-auth";
-import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
-import {
-  ConversationPopulated,
-  ParticipantPopulated,
-} from "../../../../../backend/src/util/types";
+import { ConversationPopulated, ParticipantPopulated } from "../../../../../backend/src/util/types";
 import { IModalContext, ModalContext } from "../../../context/ModalContext";
 import ConversationOperations from "../../../graphql/operations/conversations";
-import { ConversationsData } from "../../../util/types";
 import ConversationItem from "./ConversationItem";
 import ConversationModal from "./Modal/Modal";
 
 interface ConversationListProps {
   session: Session;
   conversations: Array<ConversationPopulated>;
-  onViewConversation: (
-    conversationId: string,
-    hasSeenLatestMessage: boolean
-  ) => void;
+  onViewConversation: (conversationId: string, hasSeenLatestMessage: boolean) => void;
 }
 
 const ConversationList: React.FC<ConversationListProps> = ({
@@ -33,10 +25,10 @@ const ConversationList: React.FC<ConversationListProps> = ({
     user: { id: userId },
   } = session;
 
-  const { modalOpen, openModal, closeModal } =
-    useContext<IModalContext>(ModalContext);
-  const [editingConversation, setEditingConversation] =
-    useState<ConversationPopulated | null>(null);
+  const { modalOpen, openModal, closeModal } = useContext<IModalContext>(ModalContext);
+  const [editingConversation, setEditingConversation] = useState<ConversationPopulated | null>(
+    null
+  );
 
   const router = useRouter();
   const { conversationId } = router.query;
@@ -44,11 +36,10 @@ const ConversationList: React.FC<ConversationListProps> = ({
   /**
    * Mutations
    */
-  const [updateParticipants, { loading: updateParticipantsLoading }] =
-    useMutation<
-      { updateParticipants: boolean },
-      { conversationId: string; participantIds: Array<string> }
-    >(ConversationOperations.Mutations.updateParticipants);
+  const [updateParticipants, { loading: updateParticipantsLoading }] = useMutation<
+    { updateParticipants: boolean },
+    { conversationId: string; participantIds: Array<string> }
+  >(ConversationOperations.Mutations.updateParticipants);
 
   const [deleteConversation] = useMutation<
     { deleteConversation: boolean },
@@ -156,29 +147,13 @@ const ConversationList: React.FC<ConversationListProps> = ({
             conversation={conversation}
             hasSeenLatestMessage={hasSeenLatestMessage}
             selectedConversationId={conversationId as string}
-            onClick={() =>
-              onViewConversation(conversation.id, hasSeenLatestMessage)
-            }
+            onClick={() => onViewConversation(conversation.id, hasSeenLatestMessage)}
             onEditConversation={() => onEditConversation(conversation)}
             onDeleteConversation={onDeleteConversation}
             onLeaveConversation={onLeaveConversation}
           />
         );
       })}
-      <Box
-        position="absolute"
-        bottom={0}
-        left={0}
-        width="100%"
-        bg="#313131"
-        px={8}
-        py={6}
-        zIndex={1}
-      >
-        <Button width="100%" onClick={() => signOut()}>
-          Logout
-        </Button>
-      </Box>
     </Box>
   );
 };

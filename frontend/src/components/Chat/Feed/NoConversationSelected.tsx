@@ -1,10 +1,10 @@
-import { Button, Flex, Stack, Text } from "@chakra-ui/react";
+import { useQuery } from "@apollo/client";
+import { Button, Flex, Stack } from "@chakra-ui/react";
 import React, { useContext } from "react";
 import { BiMessageSquareDots } from "react-icons/bi";
-import { ConversationsData } from "../../../util/types";
-import ConversationOperations from "../../../graphql/operations/conversations";
-import { useQuery } from "@apollo/client";
 import { IModalContext, ModalContext } from "../../../context/ModalContext";
+import ConversationOperations from "../../../graphql/operations/conversations";
+import { ConversationsData } from "../../../util/types";
 
 const NoConversation: React.FC = () => {
   const { data, loading, error } = useQuery<ConversationsData, null>(
@@ -18,14 +18,9 @@ const NoConversation: React.FC = () => {
 
   const hasConversations = conversations.length;
 
-  const text = hasConversations
-    ? "Select a Conversation"
-    : "Let's Get Started 🥳";
-
   return (
     <Flex height="100%" justify="center" align="center">
       <Stack spacing={10} align="center">
-        <Text fontSize={40}>{text}</Text>
         {hasConversations ? (
           <BiMessageSquareDots fontSize={90} />
         ) : (

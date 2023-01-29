@@ -36,14 +36,11 @@ const ConversationsWrapper: React.FC<ConversationsProps> = ({ session }) => {
     loading: conversationsLoading,
     error: conversationsError,
     subscribeToMore,
-  } = useQuery<ConversationsData, null>(
-    ConversationOperations.Queries.conversations,
-    {
-      onError: ({ message }) => {
-        toast.error(message);
-      },
-    }
-  );
+  } = useQuery<ConversationsData, null>(ConversationOperations.Queries.conversations, {
+    onError: ({ message }) => {
+      toast.error(message);
+    },
+  });
 
   /**
    * Mutations
@@ -65,15 +62,10 @@ const ConversationsWrapper: React.FC<ConversationsProps> = ({ session }) => {
         if (!subscriptionData) return;
 
         const {
-          conversationUpdated: {
-            conversation: updatedConversation,
-            addedUserIds,
-            removedUserIds,
-          },
+          conversationUpdated: { conversation: updatedConversation, addedUserIds, removedUserIds },
         } = subscriptionData;
 
-        const { id: updatedConversationId, latestMessage } =
-          updatedConversation;
+        const { id: updatedConversationId, latestMessage } = updatedConversation;
 
         /**
          * Check if user is being removed
@@ -128,10 +120,7 @@ const ConversationsWrapper: React.FC<ConversationsProps> = ({ session }) => {
             client.writeQuery<ConversationsData>({
               query: ConversationOperations.Queries.conversations,
               data: {
-                conversations: [
-                  ...(conversationsData.conversations || []),
-                  updatedConversation,
-                ],
+                conversations: [...(conversationsData.conversations || []), updatedConversation],
               },
             });
           }
@@ -159,9 +148,7 @@ const ConversationsWrapper: React.FC<ConversationsProps> = ({ session }) => {
          * Check if lastest message is already present
          * in the message query
          */
-        const hasLatestMessage = existing.messages.find(
-          (m) => m.id === latestMessage.id
-        );
+        const hasLatestMessage = existing.messages.find((m) => m.id === latestMessage.id);
 
         /**
          * Update query as re-fetch won't happen if you
@@ -213,10 +200,7 @@ const ConversationsWrapper: React.FC<ConversationsProps> = ({ session }) => {
     }
   );
 
-  const onViewConversation = async (
-    conversationId: string,
-    hasSeenLatestMessage: boolean
-  ) => {
+  const onViewConversation = async (conversationId: string, hasSeenLatestMessage: boolean) => {
     router.push({ query: { conversationId } });
 
     /**
@@ -263,9 +247,7 @@ const ConversationsWrapper: React.FC<ConversationsProps> = ({ session }) => {
            */
           const participants = [...participantsFragment.participants];
 
-          const userParticipantIdx = participants.findIndex(
-            (p) => p.user.id === userId
-          );
+          const userParticipantIdx = participants.findIndex((p) => p.user.id === userId);
 
           /**
            * Should always be found
@@ -308,10 +290,7 @@ const ConversationsWrapper: React.FC<ConversationsProps> = ({ session }) => {
   const subscribeToNewConversations = () => {
     subscribeToMore({
       document: ConversationOperations.Subscriptions.conversationCreated,
-      updateQuery: (
-        prev,
-        { subscriptionData }: ConversationCreatedSubscriptionData
-      ) => {
+      updateQuery: (prev, { subscriptionData }: ConversationCreatedSubscriptionData) => {
         if (!subscriptionData.data) return prev;
 
         const newConversation = subscriptionData.data.conversationCreated;

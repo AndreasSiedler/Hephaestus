@@ -49,6 +49,7 @@ export default function Header() {
           textAlign={useBreakpointValue({ base: "center", md: "left" })}
           fontFamily={"heading"}
           color={useColorModeValue("gray.800", "white")}
+          fontSize={"lg"}
           fontWeight={"extrabold"}
         >
           Gitbud
@@ -64,8 +65,8 @@ export default function Header() {
         <Flex alignItems={"center"}>
           <Menu>
             <MenuButton as={Button} rounded={"full"} variant={"link"} cursor={"pointer"} minW={0}>
-              <Avatar size={"md"} src={session.data?.user?.image ?? undefined}>
-                <AvatarBadge position={"absolute"} left={-5} bg="#B73CF1" boxSize={8}>
+              <Avatar boxSize={10} src={session.data?.user?.image ?? undefined}>
+                <AvatarBadge position={"absolute"} left={-7} bg="#B73CF1" boxSize={8}>
                   <Text fontWeight={"bold"}>6</Text>
                 </AvatarBadge>
               </Avatar>

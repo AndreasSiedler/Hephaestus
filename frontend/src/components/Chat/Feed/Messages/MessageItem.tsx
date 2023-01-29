@@ -32,11 +32,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, sentByMe }) => {
         </Flex>
       )}
       <Stack spacing={1} width="100%">
-        <Stack
-          direction="row"
-          align="center"
-          justify={sentByMe ? "flex-end" : "flex-start"}
-        >
+        <Stack direction="row" align="center" justify={sentByMe ? "flex-end" : "flex-start"}>
           {!sentByMe && (
             <Text fontWeight={500} textAlign={sentByMe ? "right" : "left"}>
               {message.sender.username}
@@ -47,9 +43,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, sentByMe }) => {
               locale: {
                 ...enUS,
                 formatRelative: (token) =>
-                  formatRelativeLocale[
-                    token as keyof typeof formatRelativeLocale
-                  ],
+                  formatRelativeLocale[token as keyof typeof formatRelativeLocale],
               },
             })}
           </Text>
@@ -57,8 +51,8 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, sentByMe }) => {
         <Flex direction="row" justify={sentByMe ? "flex-end" : "flex-start"}>
           <Box
             bg={sentByMe ? "brand.100" : "whiteAlpha.300"}
-            px={2}
-            py={1}
+            px={5}
+            py={3}
             borderRadius={12}
             maxWidth="65%"
           >

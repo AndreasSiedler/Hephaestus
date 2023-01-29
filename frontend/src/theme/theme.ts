@@ -1,7 +1,13 @@
 import { extendTheme, ThemeConfig } from "@chakra-ui/react";
+import { StepsStyleConfig as Steps } from "chakra-ui-steps";
 import { breakpoints } from "./foundations/breakpoints";
 import { fonts } from "./foundations/fonts";
-import { StepsStyleConfig as Steps } from "chakra-ui-steps";
+
+const colors = {
+  brand: {
+    100: "#B73CF1",
+  },
+};
 
 const components = {
   Steps,
@@ -33,6 +39,6 @@ const config: ThemeConfig = {
 };
 
 // Extend the theme
-const theme = extendTheme({ fonts, breakpoints, components, config });
+const theme = extendTheme({ fonts, colors, breakpoints, components, config });
 
 export default theme;
