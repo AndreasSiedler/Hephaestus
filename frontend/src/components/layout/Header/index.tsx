@@ -78,7 +78,9 @@ export default function Header() {
             <MenuList width={400} bg="gray.900" border="1px solid #B73CF1">
               <Flex px={5} justifyContent={"space-between"} alignItems={"center"}>
                 <Heading size={"sm"}>Notifications</Heading>
-                <IconButton icon={<SettingsIcon />} aria-label={"Settings"} />
+                <NextLink href={"/settings?menu=profile"} shallow>
+                  <IconButton icon={<SettingsIcon />} aria-label={"Settings"} />
+                </NextLink>
               </Flex>
               <Box px={5} mt={5}>
                 <SkeletonText

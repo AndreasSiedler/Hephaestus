@@ -7,12 +7,15 @@ declare module "next-auth" {
 
   interface User {
     id: string;
+    status: string;
     username: string;
-    company: string;
-    blog: string;
-    location: string;
-    hireable: boolean;
+    name: string;
+    email: string;
     bio: string;
+    location: string;
+    blog: string;
+    company: string;
+    hireable: boolean;
     followers: number;
     following: number;
     createdAtGithub: string;

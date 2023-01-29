@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { User } from "../../../util/types";
 
 type IFormInput = {
   name: string;
@@ -20,17 +21,17 @@ type IFormInput = {
 };
 
 interface ProfilePageProps {
-  defaultValues?: Record<string, string>;
+  user?: User;
 }
 
-const ProfileUpdate: React.FC<ProfilePageProps> = ({ defaultValues }) => {
+const ProfileUpdate: React.FC<ProfilePageProps> = ({ user }) => {
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
   } = useForm<IFormInput>({
     defaultValues: useMemo(() => {
-      return defaultValues;
+      return user;
     }, []),
   });
 
@@ -40,7 +41,7 @@ const ProfileUpdate: React.FC<ProfilePageProps> = ({ defaultValues }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <Stack spacing={4} my={50}>
+      <Stack spacing={4}>
         <FormControl isInvalid={Boolean(errors.name)} isRequired>
           {/* <FormLabel id="name" htmlFor="name">
             Name

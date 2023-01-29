@@ -1,12 +1,11 @@
-import { Container, Flex, IconButton } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
 import { NextPageContext } from "next";
 import { getSession, useSession } from "next-auth/react";
+import { useState } from "react";
+import DevGrid from "../components/Devs/Grid";
+import DevMatch from "../components/Devs/Match";
 import Header from "../components/layout/Header";
 import Layout from "../components/layout/Layout";
-import { HiViewGrid } from "react-icons/hi";
-import { useState } from "react";
-import DevMatch from "../components/Devs/Match";
-import DevGrid from "../components/Devs/Grid";
 
 export default function Devs() {
   const { data: session } = useSession();
@@ -18,13 +17,13 @@ export default function Devs() {
         <Header />
         {session && (
           <>
-            <Flex justify="center" mt="5">
+            {/* <Flex justify="center" mt="5">
               <IconButton
                 onClick={() => setActiveGridView((currentValue) => !currentValue)}
                 icon={<HiViewGrid />}
                 aria-label={"gridview"}
               />
-            </Flex>
+            </Flex> */}
             {!activeGridView ? <DevMatch session={session} /> : <DevGrid session={session} />}
           </>
         )}
