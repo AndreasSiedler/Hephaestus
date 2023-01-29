@@ -1,7 +1,18 @@
-import { Button, Center, Container, Flex, Heading } from "@chakra-ui/react";
+import {
+  Button,
+  Container,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  Heading,
+  Input,
+} from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import { NextPageContext } from "next";
 import { getSession, useSession } from "next-auth/react";
+import { useState } from "react";
 import { FiCheckCircle } from "react-icons/fi";
 import Header from "../components/layout/Header";
 import Layout from "../components/layout/Layout";
@@ -13,24 +24,45 @@ export default function Sprucer() {
   const { nextStep, prevStep, reset, activeStep } = useSteps({
     initialStep: 0,
   });
+  const [name, setName] = useState("");
+
+  if (!session.data?.user) return;
+
+  const {
+    data: {
+      user: { name: userName },
+    },
+  } = session && session;
+
+  const handleInputChange = (e: any) => setName(e.target.value);
+  const isError = name === "";
 
   return (
     <Layout title="Bittstorm - Schaffe Platz für Neues">
       <Container maxW={"container.lg"} px={10} py={5}>
         <Header />
-        <Center flexDir="column" mt="16">
-          <Heading maxW="md" as={"h1"} textAlign="center">
-            Hi {session.data?.user.name}! 👋 You are almost done..
-          </Heading>
-        </Center>
+        <Heading maxW="md" as={"h1"} textAlign="center" margin={"auto"}>
+          Hi {session.data?.user.name}! 👋 You are almost done..
+        </Heading>
+        <Steps checkIcon={FiCheckCircle} activeStep={activeStep} w={500} m={"auto"}>
+          {steps.map(({ label }, index) => (
+            <Step label={label} key={label}>
+              <FormControl isInvalid={isError}>
+                <FormLabel>Email</FormLabel>
+                <Input type="email" value={name} onChange={handleInputChange} />
+                {!isError ? (
+                  <FormHelperText>
+                    Enter the email you'd like to receive the newsletter on.
+                  </FormHelperText>
+                ) : (
+                  <FormErrorMessage>Email is required.</FormErrorMessage>
+                )}
+              </FormControl>
+            </Step>
+          ))}
+        </Steps>
+
         <Flex flexDir="column" mt="20">
-          <Steps checkIcon={FiCheckCircle} activeStep={activeStep}>
-            {steps.map(({ label }, index) => (
-              <Step label={label} key={label}>
-                Inhalt
-              </Step>
-            ))}
-          </Steps>
           {activeStep === steps.length ? (
             <Flex px={4} py={4} flexDirection="column">
               <Heading fontSize="xl" textAlign="center">

@@ -75,7 +75,7 @@ export default function Header() {
                 </AvatarBadge>
               </Avatar>
             </MenuButton>
-            <MenuList width={400}>
+            <MenuList width={400} bg="gray.900" border="1px solid #B73CF1">
               <Flex px={5} justifyContent={"space-between"} alignItems={"center"}>
                 <Heading size={"sm"}>Notifications</Heading>
                 <IconButton icon={<SettingsIcon />} aria-label={"Settings"} />
