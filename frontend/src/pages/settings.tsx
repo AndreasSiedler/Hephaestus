@@ -6,7 +6,7 @@ import { NextPageContext } from "next/types";
 import { useEffect } from "react";
 import Header from "../components/layout/Header";
 import Layout from "../components/layout/Layout";
-import ProfileUpdate from "../components/Profile/UpdateProile";
+import ProfileUpdate from "../components/User/UpdateUser";
 
 const MENUS = [
   { id: "profile", label: "Profile" },

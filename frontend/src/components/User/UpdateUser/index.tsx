@@ -49,6 +49,7 @@ const ProfileUpdate: React.FC<ProfilePageProps> = ({ user }) => {
 
   async function onSubmit(values: IFormInput) {
     try {
+      console.log(values);
       await updateUser({
         variables: values,
       });

@@ -97,13 +97,15 @@ const resolvers = {
       context: GraphQLContext
     ) {
       const { session, prisma } = context;
-      const { name, email, bio, location, blog, status, syncGithub } = args;
 
       if (!session?.user) {
         return {
           error: "Not authorized",
         };
       }
+
+      const { name, email, bio, location, blog, status, syncGithub } = args;
+      console.log(status);
 
       const {
         user: { id: userId },
@@ -120,8 +122,13 @@ const resolvers = {
             bio: bio,
             location: location,
             blog: blog,
+            status: status,
           },
         });
+
+        if (syncGithub) {
+          console.log("sync with github");
+        }
 
         return {
           success: true,
