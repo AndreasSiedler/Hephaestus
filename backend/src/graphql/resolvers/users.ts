@@ -93,6 +93,11 @@ const resolvers = {
         blog?: string;
         status?: string;
         syncGithub?: boolean;
+        skills: {
+          id?: string;
+          name: string;
+          weight?: number;
+        }[];
       },
       context: GraphQLContext
     ) {
@@ -104,27 +109,75 @@ const resolvers = {
         };
       }
 
-      const { name, email, bio, location, blog, status, syncGithub } = args;
-      console.log(status);
+      const { name, email, bio, location, blog, status, syncGithub, skills = [] } = args;
 
       const {
         user: { id: userId },
       } = session;
 
       try {
-        await prisma.user.update({
+        const existingSkills = await prisma.skill.findMany({
           where: {
-            id: userId,
-          },
-          data: {
-            name: name,
-            email: email,
-            bio: bio,
-            location: location,
-            blog: blog,
-            status: status,
+            userId,
           },
         });
+        const existingSkillIds = existingSkills.map((s) => s.name);
+        const skillIds = skills.map((s) => s.name);
+
+        /**
+         * Delete existing skills NOT included in selected skills
+         */
+        const skillsToDelete = existingSkillIds.filter((name) => !skillIds.includes(name));
+
+        /**
+         * Create skill NOT included in existing skills
+         */
+        const skillsToCreate = skillIds.filter((name) => !existingSkillIds.includes(name));
+
+        const transactionStatements = [
+          prisma.user.update({
+            where: {
+              id: userId,
+            },
+            data: {
+              name: name,
+              email: email,
+              bio: bio,
+              location: location,
+              blog: blog,
+              status: status,
+              skills: {
+                deleteMany: {
+                  name: {
+                    in: skillsToDelete,
+                  },
+                },
+              },
+            },
+          }),
+        ];
+
+        if (skillsToCreate) {
+          transactionStatements.push(
+            prisma.user.update({
+              where: {
+                id: userId,
+              },
+              data: {
+                skills: {
+                  createMany: {
+                    data: skillsToCreate?.map((skill) => ({
+                      name: skill,
+                      weight: 0,
+                    })),
+                  },
+                },
+              },
+            })
+          );
+        }
+
+        const [deleteUpdate, addUpdate] = await prisma.$transaction(transactionStatements);
 
         if (syncGithub) {
           console.log("sync with github");

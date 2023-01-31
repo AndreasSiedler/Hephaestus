@@ -26,6 +26,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -34,6 +35,18 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Skill {
+  id     String @id @default(cuid())
+  name   String
+  weight Int?
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model User {
@@ -59,6 +72,7 @@ model User {
   friendsOf       Friendship[]              @relation(name: "friendsOf")
   conversations   ConversationParticipant[]
   messages        Message[]
+  skills          Skill[]
   createdAt       DateTime                  @default(now())
   updatedAt       DateTime                  @default(now()) @updatedAt
 }

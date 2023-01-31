@@ -65,13 +65,11 @@ export default function Header() {
         <Flex alignItems={"center"}>
           <Menu>
             <MenuButton as={Button} rounded={"full"} variant={"link"} cursor={"pointer"} minW={0}>
-              <Avatar boxSize={10} src={session.data?.user?.image ?? undefined}>
-                <AvatarBadge position={"absolute"} left={-7} bg="#B73CF1" boxSize={8}>
-                  <Text fontWeight={"bold"}>6</Text>
-                </AvatarBadge>
+              <Avatar size={"sm"} src={session.data?.user?.image ?? undefined}>
+                <AvatarBadge bg="brand.500" boxSize={4} />
               </Avatar>
             </MenuButton>
-            <MenuList width={400} bg="gray.900" border="1px solid #B73CF1">
+            <MenuList width={400} bg="gray.900" border="1px solid" borderColor={"brand.500"}>
               <Flex px={5} justifyContent={"space-between"} alignItems={"center"}>
                 <Heading size={"sm"}>Notifications</Heading>
                 <NextLink href={"/settings?menu=profile"} shallow>

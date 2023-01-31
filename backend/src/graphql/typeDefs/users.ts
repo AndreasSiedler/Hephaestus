@@ -15,6 +15,10 @@ const typeDefs = gql`
     searchUsers(username: String!): [User]
   }
 
+  input Skill {
+    name: String
+    weight: Int
+  }
   type Mutation {
     updateUser(
       name: String
@@ -24,18 +28,9 @@ const typeDefs = gql`
       blog: String
       status: String
       syncGithub: Boolean
+      skills: [Skill]
     ): UpdateUserResponse
     createUsername(username: String!): CreateUsernameResponse
-  }
-
-  type UpdateUserInput {
-    name: String
-    email: String
-    bio: String
-    location: String
-    blog: String
-    status: String
-    syncGithub: Boolean
   }
 
   type UpdateUserResponse {

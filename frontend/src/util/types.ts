@@ -95,12 +95,17 @@ export interface SearchedUser {
 }
 
 export interface UpdateUserData {
-  name: string;
-  email: string;
-  bio: string;
-  location: string;
-  blog: string;
-  status: string;
+  name?: string;
+  email?: string;
+  bio?: string;
+  location?: string;
+  blog?: string;
+  status?: string;
+  syncGithub?: boolean;
+  skills: {
+    name: string;
+    weight?: number;
+  }[];
 }
 
 /**
