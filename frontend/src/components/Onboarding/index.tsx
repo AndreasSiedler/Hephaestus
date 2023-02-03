@@ -2,7 +2,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Button, Center, Flex, HStack, Text } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import NextLink from "next/link";
-import { useEffect, useState } from "react";
 import UserOperations from "../../graphql/operations/users";
 import { PopulatedUserData, UpdateUserData } from "../../util/types";
 import SkeletonLoader from "../common/SkeletonLoader";
@@ -17,6 +16,15 @@ interface Generals {
   location?: string;
 }
 
+export type IOnboardingFormInput = {
+  expertise?: string;
+  skills?: string[];
+  name?: string;
+  location?: string;
+  email?: string;
+  bio?: string;
+};
+
 const Onboarding: React.FC = () => {
   const { nextStep, prevStep, setStep, reset, activeStep } = useSteps({
     initialStep: 0,
@@ -25,24 +33,13 @@ const Onboarding: React.FC = () => {
   const { data, loading, error } = useQuery<PopulatedUserData>(
     UserOperations.Queries.populatedUser
   );
+
   const [updateUser, { loading: updateUserLoading }] = useMutation<UpdateUserData>(
     UserOperations.Mutations.updateUser
   );
 
-  const [expertise, setExpertise] = useState<string | undefined>(undefined);
-  const [skills, setSkills] = useState<string[] | undefined>(undefined);
-  const [generals, setGenerals] = useState<Generals | undefined>(undefined);
-
-  useEffect(() => {
-    if (activeStep === steps.length) {
-      onSubmit();
-    }
-  }, [activeStep]);
-
-  const onSubmit = async () => {
-    if (!generals) return;
-
-    const { name, email, bio, location } = generals;
+  const onSubmit = async (values: IOnboardingFormInput) => {
+    const { expertise, skills, name, email, bio, location } = values;
     const extendedSkills = skills?.map((skill) => ({ name: skill, weight: 0 }));
 
     try {
@@ -61,17 +58,8 @@ const Onboarding: React.FC = () => {
     }
   };
 
-  const onExpertiseChange = (value: string) => {
-    setExpertise(value);
-  };
-
-  const onSkillsChange = (values: string[]) => {
-    console.log(values);
-    setSkills(values);
-  };
-
-  const onGeneralsChange = (values: any) => {
-    setGenerals(values);
+  const onClickNextStep = () => {
+    nextStep();
   };
 
   return (
@@ -108,12 +96,7 @@ const Onboarding: React.FC = () => {
           <OnboardingSteps
             activeStep={activeStep}
             populatedUser={data.populatedUser}
-            expertise={expertise}
-            skills={skills}
-            generals={generals}
-            onExpertiseChange={onExpertiseChange}
-            onSkillsChange={onSkillsChange}
-            onGeneralsChange={onGeneralsChange}
+            onSubmit={onSubmit}
           />
           {activeStep === steps.length ? (
             <Flex p={4}>
@@ -132,9 +115,15 @@ const Onboarding: React.FC = () => {
               >
                 Prev
               </Button>
-              <Button isLoading={updateUserLoading} onClick={nextStep} colorScheme="brand">
-                {activeStep === steps.length - 1 ? "Finish" : "Next"}
-              </Button>
+              {!(activeStep === steps.length - 1) ? (
+                <Button isLoading={updateUserLoading} onClick={onClickNextStep} colorScheme="brand">
+                  Next
+                </Button>
+              ) : (
+                <Button isLoading={updateUserLoading} colorScheme="brand" type="submit">
+                  Finish
+                </Button>
+              )}
             </Flex>
           )}
         </>
