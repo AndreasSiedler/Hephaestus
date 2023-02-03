@@ -5,6 +5,35 @@ import { CreateUsernameResponse, GraphQLContext } from "../../util/types";
 
 const resolvers = {
   Query: {
+    populatedUser: async (_: any, __: any, context: GraphQLContext) => {
+      const { prisma, session } = context;
+      if (!session?.user) {
+        throw new GraphQLError("Not authorized");
+      }
+
+      const {
+        user: { id: myUserId },
+      } = session;
+
+      try {
+        /**
+         * Get user and populate it
+         */
+        const user = await prisma.user.findUnique({
+          where: {
+            id: myUserId,
+          },
+          include: {
+            skills: true,
+          },
+        });
+
+        return user;
+      } catch (error: any) {
+        console.log("error", error);
+        throw new GraphQLError(error?.message);
+      }
+    },
     getUser: async function getUser(_: any, args: { username: string }, context: GraphQLContext) {
       const { prisma, session } = context;
       if (!session?.user) {

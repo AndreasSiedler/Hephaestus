@@ -2,6 +2,24 @@ import { gql } from "@apollo/client";
 
 export default {
   Queries: {
+    populatedUser: gql`
+      query PopulatedUser {
+        populatedUser {
+          id
+          name
+          username
+          email
+          bio
+          location
+          image
+          expertise
+          skills {
+            name
+            weight
+          }
+        }
+      }
+    `,
     getUser: gql`
       query GetUser {
         getUser {

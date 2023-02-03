@@ -5,20 +5,27 @@ const typeDefs = gql`
 
   type User {
     id: String
-    username: String
     name: String
+    username: String
+    email: String
+    location: String
+    bio: String
     image: String
+    expertise: String
+    skills: [Skill]
   }
 
   type Query {
+    populatedUser: User
     getUser: User
     searchUsers(username: String!): [User]
   }
 
-  input Skill {
+  input SkillInput {
     name: String
     weight: Int
   }
+
   type Mutation {
     updateUser(
       name: String
@@ -28,7 +35,7 @@ const typeDefs = gql`
       blog: String
       status: String
       syncGithub: Boolean
-      skills: [Skill]
+      skills: [SkillInput]
     ): UpdateUserResponse
     createUsername(username: String!): CreateUsernameResponse
   }

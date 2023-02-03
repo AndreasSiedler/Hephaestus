@@ -61,6 +61,28 @@ export interface User {
 /**
  * Users
  */
+
+export interface PopulatedUserSkill {
+  name: string;
+  weight: number;
+}
+
+export interface PopulatedUser {
+  id: string;
+  expertise: string;
+  name?: string;
+  username: string;
+  email?: string;
+  location?: string;
+  bio?: string;
+  image?: string;
+  skills?: PopulatedUserSkill[];
+}
+
+export interface PopulatedUserData {
+  populatedUser: PopulatedUser;
+}
+
 export interface CreateUsernameVariables {
   username: string;
 }

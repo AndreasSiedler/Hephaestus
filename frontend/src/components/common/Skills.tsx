@@ -12,6 +12,7 @@ const SKILLS_FRONTEND = [
 
 interface SkillsProps {
   skills: string[];
+  defaultSkills?: string[];
   onChange: (value: string[]) => void;
 }
 
