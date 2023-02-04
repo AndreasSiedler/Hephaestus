@@ -1,16 +1,18 @@
 import { Box, Flex, Heading } from "@chakra-ui/react";
 import { useState } from "react";
+import { useFormContext } from "react-hook-form";
 
-interface ExpertiseLevelProps {
-  expertise: string;
-  onChange: (value: string) => void;
-}
-
-const ExpertiseLevel: React.FC<ExpertiseLevelProps> = ({ expertise, onChange }) => {
+const ExpertiseLevel: React.FC = () => {
   const [hoveredLevel, setHoveredLevel] = useState("");
+  const { register, setValue, watch } = useFormContext();
+  const { expertise } = watch();
+
+  register("expertise", {
+    required: "Please share your expertise with us.",
+  });
 
   const onLevelClick = (value: string) => {
-    onChange(value);
+    setValue("expertise", value, { shouldValidate: true });
   };
 
   const onMouseEnter = (value: string) => {

@@ -28,6 +28,7 @@ const typeDefs = gql`
 
   type Mutation {
     updateUser(
+      expertise: String
       name: String
       email: String
       bio: String

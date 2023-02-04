@@ -44,6 +44,7 @@ export interface GithubPublicUser {
 export interface User {
   id: string;
   status: string;
+  expertise: string;
   username: string;
   name: string;
   email: string;

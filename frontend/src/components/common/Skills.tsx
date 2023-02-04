@@ -1,4 +1,5 @@
 import { Heading, Icon, Wrap, WrapItem } from "@chakra-ui/react";
+import { useFormContext } from "react-hook-form";
 import { FaAngular, FaHtml5, FaReact, FaVuejs } from "react-icons/fa";
 import { SiNextdotjs } from "react-icons/si";
 
@@ -17,6 +18,10 @@ interface SkillsProps {
 }
 
 const Skills: React.FC<SkillsProps> = ({ skills, onChange }) => {
+  const { register } = useFormContext();
+  register("skills", {
+    required: "Skills are required",
+  });
   const onSkillClick = (value: string) => {
     const isAlreadySelected = !!skills.find((item) => item === value);
 

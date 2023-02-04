@@ -115,6 +115,7 @@ const resolvers = {
     updateUser: async function updateUser(
       _: any,
       args: {
+        expertise?: string;
         name?: string;
         email?: string;
         bio?: string;
@@ -138,7 +139,7 @@ const resolvers = {
         };
       }
 
-      const { name, email, bio, location, blog, status, syncGithub, skills = [] } = args;
+      const { expertise, name, email, bio, location, blog, status, syncGithub, skills = [] } = args;
 
       const {
         user: { id: userId },
@@ -169,6 +170,7 @@ const resolvers = {
               id: userId,
             },
             data: {
+              expertise: expertise,
               name: name,
               email: email,
               bio: bio,

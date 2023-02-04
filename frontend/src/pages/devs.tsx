@@ -44,8 +44,8 @@ export async function getServerSideProps(context: NextPageContext) {
     };
   }
 
-  const { bio, blog, name, status, location } = session.user;
-  const isUserComplete = !!bio && !!blog && !!name && !!status && !!location;
+  const { expertise, bio, name, location } = session.user;
+  const isUserComplete = !!expertise && !!bio && !!name && !!location;
 
   if (!isUserComplete) {
     return {

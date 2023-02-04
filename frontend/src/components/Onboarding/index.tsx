@@ -7,14 +7,7 @@ import { PopulatedUserData, UpdateUserData } from "../../util/types";
 import SkeletonLoader from "../common/SkeletonLoader";
 import OnboardingSteps from "./OnboardingSteps";
 
-const steps = [{ label: "Step 1" }, { label: "Step 2" }, { label: "Step 3" }];
-
-interface Generals {
-  name?: string;
-  email?: string;
-  bio?: string;
-  location?: string;
-}
+const steps = ["expertise", "skills", "generals"];
 
 export type IOnboardingFormInput = {
   expertise?: string;
@@ -39,27 +32,26 @@ const Onboarding: React.FC = () => {
   );
 
   const onSubmit = async (values: IOnboardingFormInput) => {
-    const { expertise, skills, name, email, bio, location } = values;
-    const extendedSkills = skills?.map((skill) => ({ name: skill, weight: 0 }));
-
-    try {
-      await updateUser({
-        variables: {
-          name,
-          expertise,
-          email,
-          bio,
-          location,
-          skills: extendedSkills,
-        },
-      });
-    } catch (error: any) {
-      console.log(error);
+    if (activeStep < steps.length - 1) {
+      nextStep();
+    } else {
+      try {
+        const { expertise, skills, name, email, bio, location } = values;
+        const extendedSkills = skills?.map((skill) => ({ name: skill, weight: 0 }));
+        await updateUser({
+          variables: {
+            name,
+            expertise,
+            email,
+            bio,
+            location,
+            skills: extendedSkills,
+          },
+        });
+      } catch (error: any) {
+        console.log(error);
+      }
     }
-  };
-
-  const onClickNextStep = () => {
-    nextStep();
   };
 
   return (
@@ -87,7 +79,7 @@ const Onboarding: React.FC = () => {
       {data && (
         <>
           <Center mt={10} mb={20}>
-            <Steps activeStep={activeStep} maxWidth={400} colorScheme="brand">
+            <Steps activeStep={activeStep} maxWidth={400} colorScheme="brand" responsive={false}>
               <Step key={"expertise"} />
               <Step key={"languages"} />
               <Step key={"general"} />
@@ -96,36 +88,11 @@ const Onboarding: React.FC = () => {
           <OnboardingSteps
             activeStep={activeStep}
             populatedUser={data.populatedUser}
+            isLoading={updateUserLoading}
+            onNextStep={nextStep}
+            onPrevStep={prevStep}
             onSubmit={onSubmit}
           />
-          {activeStep === steps.length ? (
-            <Flex p={4}>
-              <Button mx="auto" size="sm" onClick={reset}>
-                Reset
-              </Button>
-            </Flex>
-          ) : (
-            <Flex width="100%" justify="flex-end">
-              <Button
-                isDisabled={activeStep === 0}
-                mr={4}
-                onClick={prevStep}
-                size="sm"
-                variant="ghost"
-              >
-                Prev
-              </Button>
-              {!(activeStep === steps.length - 1) ? (
-                <Button isLoading={updateUserLoading} onClick={onClickNextStep} colorScheme="brand">
-                  Next
-                </Button>
-              ) : (
-                <Button isLoading={updateUserLoading} colorScheme="brand" type="submit">
-                  Finish
-                </Button>
-              )}
-            </Flex>
-          )}
         </>
       )}
     </>
