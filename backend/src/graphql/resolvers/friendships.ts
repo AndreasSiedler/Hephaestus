@@ -140,6 +140,7 @@ const resolvers = {
           data: {
             type: "FRIENDSHIP_CREATE",
             userId: myUserId,
+            senderId: friendId,
           },
         });
 

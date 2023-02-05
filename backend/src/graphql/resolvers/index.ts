@@ -4,6 +4,7 @@ import messageResolvers from "./messages";
 import userResolvers from "./users";
 import friendshipResulvers from "./friendships";
 import scalarResolvers from "./scalars";
+import notificationResolvers from "./notifications";
 
 const resolvers = merge(
   {},
@@ -11,7 +12,8 @@ const resolvers = merge(
   scalarResolvers,
   conversationResolvers,
   messageResolvers,
-  friendshipResulvers
+  friendshipResulvers,
+  notificationResolvers
 );
 
 export default resolvers;

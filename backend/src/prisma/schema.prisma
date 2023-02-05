@@ -49,6 +49,20 @@ model Skill {
   @@index([userId])
 }
 
+model Notification {
+  id        String   @id @default(cuid())
+  type      String
+  senderId  String?
+  sender    User?    @relation(fields: [senderId], references: [id])
+  userId    String
+  user      User     @relation(name: "notifications", fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([senderId])
+}
+
 model User {
   id              String                    @id @default(cuid())
   username        String                    @unique
@@ -74,9 +88,10 @@ model User {
   conversations   ConversationParticipant[]
   messages        Message[]
   skills          Skill[]
-  notifications   Notification[]
+  notifications   Notification[]            @relation(name: "notifications")
   createdAt       DateTime                  @default(now())
   updatedAt       DateTime                  @default(now()) @updatedAt
+  Notification    Notification[]
 }
 
 model VerificationToken {
@@ -139,15 +154,4 @@ model Message {
 
   @@index([conversationId])
   @@index([senderId])
-}
-
-model Notification {
-  id        String   @id @default(cuid())
-  type      String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
 }
