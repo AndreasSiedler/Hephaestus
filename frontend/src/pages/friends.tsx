@@ -1,7 +1,7 @@
 import { Container } from "@chakra-ui/react";
 import { getSession, useSession } from "next-auth/react";
 import { NextPageContext } from "next/types";
-import FriendsWrapper from "../components/Friends/FriendsWrapper";
+import FriendsContainer from "../components/Friends";
 import Header from "../components/layout/Header";
 import Layout from "../components/layout/Layout";
 
@@ -12,7 +12,7 @@ const Friends: React.FC = () => {
     <Layout title="Bittstorm - Schaffe Platz für Neues">
       <Container maxW={"container.lg"} px={10} py={5}>
         <Header />
-        {session && <FriendsWrapper session={session} />}
+        {session && <FriendsContainer session={session} />}
       </Container>
     </Layout>
   );

@@ -14,12 +14,13 @@ import {
 } from "../../util/types";
 import SkeletonLoader from "../common/SkeletonLoader";
 import FriendList from "./FriendList";
+import WaitingFriends from "./WaitingFriends";
 
-interface FriendsWrapperProps {
+interface FriendsProps {
   session: Session;
 }
 
-const FriendsWrapper: React.FC<FriendsWrapperProps> = ({ session }) => {
+const Friends: React.FC<FriendsProps> = ({ session }) => {
   const {
     data: waitingFriendships,
     loading: waitingFriendshipsLoading,
@@ -32,10 +33,11 @@ const FriendsWrapper: React.FC<FriendsWrapperProps> = ({ session }) => {
     refetch: refetchFriendships,
   } = useQuery<FriedshipsData>(FriendshipOperations.Queries.friendships);
 
-  const [acceptFriendship, { error: acceptFriendshipError }] = useMutation<
-    AcceptFriendshipData,
-    AcceptFriendshipVariables
-  >(FriendshipOperations.Mutations.acceptFriendship);
+  const [acceptFriendship, { loading: acceptFriendshipLoading, error: acceptFriendshipError }] =
+    useMutation<AcceptFriendshipData, AcceptFriendshipVariables>(
+      FriendshipOperations.Mutations.acceptFriendship
+    );
+
   const [cancelFriendship, { loading: cancelFriendshipLoading, error: cancelFriendshipError }] =
     useMutation<CancelFriendshipData, CancelFriendshipVariables>(
       FriendshipOperations.Mutations.cancelFriendship
@@ -85,17 +87,14 @@ const FriendsWrapper: React.FC<FriendsWrapperProps> = ({ session }) => {
         <SkeletonLoader count={3} height={20} width={"full"} spacing={5} />
       ) : (
         <Box mt={10}>
-          <FriendList
-            session={session}
-            friends={waitingFriendships?.waitingFriendships ?? []}
-            loading={waitingFriendshipsLoading}
-            cancelFriendshipLoading={cancelFriendshipLoading}
-            onAcceptFriendship={onAcceptFriendship}
-            onCancelFriendship={onCancelFriendship}
-          />
           <Heading size={"lg"} as={"h2"}>
             Waiting friends ({waitingFriendships?.waitingFriendships.length})
           </Heading>
+          <WaitingFriends
+            friendships={waitingFriendships?.waitingFriendships ?? []}
+            loading={acceptFriendshipLoading}
+            onAcceptFriendship={onAcceptFriendship}
+          />
         </Box>
       )}
 
@@ -120,4 +119,4 @@ const FriendsWrapper: React.FC<FriendsWrapperProps> = ({ session }) => {
   );
 };
 
-export default FriendsWrapper;
+export default Friends;
