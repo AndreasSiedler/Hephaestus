@@ -133,6 +133,16 @@ const resolvers = {
           },
         });
 
+        /**
+         * TODO: Add notification
+         */
+        await prisma.notification.create({
+          data: {
+            type: "FRIENDSHIP_CREATE",
+            userId: myUserId,
+          },
+        });
+
         return {
           success: true,
         };

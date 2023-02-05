@@ -74,6 +74,7 @@ model User {
   conversations   ConversationParticipant[]
   messages        Message[]
   skills          Skill[]
+  notifications   Notification[]
   createdAt       DateTime                  @default(now())
   updatedAt       DateTime                  @default(now()) @updatedAt
 }
@@ -138,4 +139,15 @@ model Message {
 
   @@index([conversationId])
   @@index([senderId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
