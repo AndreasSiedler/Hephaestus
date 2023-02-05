@@ -51,9 +51,10 @@ model Skill {
 
 model Notification {
   id        String   @id @default(cuid())
+  isRead    Boolean  @default(false)
   type      String
   senderId  String?
-  sender    User?    @relation(fields: [senderId], references: [id])
+  sender    User?    @relation(name: "notificationsOf", fields: [senderId], references: [id])
   userId    String
   user      User     @relation(name: "notifications", fields: [userId], references: [id])
   createdAt DateTime @default(now())
@@ -89,9 +90,9 @@ model User {
   messages        Message[]
   skills          Skill[]
   notifications   Notification[]            @relation(name: "notifications")
+  notificationsOf Notification[]            @relation(name: "notificationsOf")
   createdAt       DateTime                  @default(now())
   updatedAt       DateTime                  @default(now()) @updatedAt
-  Notification    Notification[]
 }
 
 model VerificationToken {
