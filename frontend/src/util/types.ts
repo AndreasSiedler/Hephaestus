@@ -95,13 +95,15 @@ export interface CreateUsernameData {
   };
 }
 
+export interface GetUser {
+  id: string;
+  username: string;
+  name: string;
+  image: string;
+}
+
 export interface GetUserData {
-  getUser: {
-    id: string;
-    username: string;
-    name: string;
-    image: string;
-  };
+  getUser?: GetUser;
 }
 
 export interface SearchUsersInputs {

@@ -4,9 +4,9 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { NextPageContext } from "next/types";
 import { useEffect } from "react";
+import UpdateUser from "../components/common/UpdateUser";
 import Header from "../components/layout/Header";
 import Layout from "../components/layout/Layout";
-import UpdateUser from "../components/User/UpdateUser/UpdateUser";
 
 const MENUS = [
   { id: "profile", label: "Profile" },
@@ -47,7 +47,7 @@ const SettingsPage: React.FC = () => {
             ))}
           </VStack>
           <Flex flexGrow={"1"} flexDir={"column"} px={10}>
-            {query.menu === "profile" && <UpdateUser user={session.data?.user} />}
+            {query.menu === "profile" && <UpdateUser />}
           </Flex>
         </Flex>
       </Container>

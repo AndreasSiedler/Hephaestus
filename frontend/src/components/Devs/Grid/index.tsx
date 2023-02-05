@@ -27,7 +27,8 @@ function ProfileCard() {
       bg="gray.900"
       display={["none", "none", "block"]}
       width="100%"
-      border="1px solid #B73CF1"
+      border={"1px solid"}
+      borderColor={"brand.500"}
       px="6"
       py="10"
       borderRadius="md"

@@ -55,7 +55,7 @@ const FriendshipItem: React.FC<FriendshipItemProps> = ({
           ml={5}
           leftIcon={<FaGithub />}
           variant={"solid"}
-          bg={"#B73CF1"}
+          bg={"brand.500"}
           px={10}
           isLoading={loading}
           onClick={() => onAcceptFriendship(friendshipId)}

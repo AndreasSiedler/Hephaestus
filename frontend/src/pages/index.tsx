@@ -64,8 +64,8 @@ export default function Home({}: HomeProps) {
             variant="outline"
             p={8}
             mt={10}
-            borderColor="#B73CF1"
-            color="#B73CF1"
+            borderColor="brand.500"
+            color="brand.500"
             onClick={handleSignin}
           >
             Signin with Github

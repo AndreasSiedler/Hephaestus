@@ -1,25 +1,18 @@
 import { useMutation, useQuery } from "@apollo/client";
 import {
-  Avatar,
-  AvatarBadge,
   Box,
   Button,
-  Center,
   Flex,
-  Heading,
   HStack,
-  Icon,
   Skeleton,
   SkeletonCircle,
   SkeletonText,
   Text,
 } from "@chakra-ui/react";
 import { Session } from "next-auth";
+import NextLink from "next/link";
 import React from "react";
 import { toast } from "react-hot-toast";
-import { BsGithub } from "react-icons/bs";
-import { FaReact } from "react-icons/fa";
-import { SiJavascript } from "react-icons/si";
 import FriendshipOperations from "../../../graphql/operations/friendships";
 import UserOperations from "../../../graphql/operations/users";
 import {
@@ -27,13 +20,14 @@ import {
   RequestFriendshipData,
   RequestFriendshipVariables,
 } from "../../../util/types";
+import UserCard from "./UserCard";
 
 interface DevMatchProps {
   session: Session;
 }
 
 const DevMatch: React.FC<DevMatchProps> = ({ session }) => {
-  const { data, refetch, loading } = useQuery<GetUserData>(UserOperations.Queries.getUser);
+  const { data, loading, error, refetch } = useQuery<GetUserData>(UserOperations.Queries.getUser);
   const [requestFriendship, { loading: requestFriendshipLoading }] = useMutation<
     RequestFriendshipData,
     RequestFriendshipVariables
@@ -42,14 +36,14 @@ const DevMatch: React.FC<DevMatchProps> = ({ session }) => {
   const onRequestFriendship = async (friendId: string) => {
     if (!friendId) return;
     try {
-      const { data } = await requestFriendship({
+      const { data: response } = await requestFriendship({
         variables: {
           friendId,
         },
       });
 
-      if (data?.requestFriendship.error) {
-        toast.error(data?.requestFriendship.error);
+      if (response?.requestFriendship.error) {
+        toast.error(response?.requestFriendship.error);
         return refetch();
       }
 
@@ -68,7 +62,8 @@ const DevMatch: React.FC<DevMatchProps> = ({ session }) => {
         bg="gray.900"
         height={500}
         width="100%"
-        border="3px solid #B73CF1"
+        border={"3px solid"}
+        borderColor={"brand.500"}
         px="6"
         py="10"
         borderRadius="xl"
@@ -88,48 +83,28 @@ const DevMatch: React.FC<DevMatchProps> = ({ session }) => {
               <Skeleton w="24" height="25px" mx="auto" mt="5" />
             </>
           )}
-          {!!data?.getUser ? (
-            <>
-              <Center>
-                <Avatar size="xl" name="Segun Adebayo" src={data.getUser.image}>
-                  <AvatarBadge boxSize="1em" bg="green.500" />
-                </Avatar>
-              </Center>
-
-              <Heading as="h1" size="md" noOfLines={1} textAlign="center" mt="5">
-                {data.getUser.username}
-              </Heading>
-
-              <Text textAlign="center" mt="2">
-                Building @chakra-ui ⚡️. Design Systems and UI Engineer
+          {error && (
+            <Flex flexDir={"column"} mt={200} alignItems={"center"}>
+              <Text textAlign={"center"} maxW={"xl"}>
+                Ups, something went wrong. Please try it again or write me a message.
               </Text>
-
-              <HStack justifyContent="center" mt="5" spacing="5">
-                <Icon as={FaReact} size="md" fontSize="3xl" />
-                <Icon as={SiJavascript} size="md" fontSize="3xl" />
-              </HStack>
-
-              <Text textAlign="center" color="gray.600" fontSize="sm" mt="10">
-                “Always ready to help, just contact me.”
-              </Text>
-
-              <HStack justifyContent="center" mt="10">
-                <Button
-                  leftIcon={<BsGithub />}
-                  variant="solid"
-                  p={8}
-                  color="white"
-                  bgColor="#B73CF1"
-                  borderColor="#B73CF1"
-                  isLoading={requestFriendshipLoading}
-                  onClick={() => onRequestFriendship(data.getUser.id)}
-                >
-                  Connect
+              <HStack justify={"center"} mt={5}>
+                <NextLink href={"/chat?participants=andreassiedler"}>
+                  <Button size={"xl"}>Message</Button>
+                </NextLink>
+                <Button size={"xl"} colorScheme={"brand"}>
+                  Reload
                 </Button>
               </HStack>
-            </>
-          ) : (
-            <Text>No other users available at the moment. Please try again later.</Text>
+            </Flex>
+          )}
+          {data && (
+            <UserCard
+              getUser={data.getUser}
+              isLoading={requestFriendshipLoading}
+              onRefreshGetUser={() => refetch()}
+              onRequestFriendship={onRequestFriendship}
+            />
           )}
         </Flex>
       </Box>
@@ -145,7 +120,8 @@ function SkeletionProfileCard() {
       bg="gray.900"
       display={["none", "none", "block"]}
       width="100%"
-      border="1px solid #B73CF1"
+      border={"1px solid"}
+      borderColor={"brand.500"}
       px="6"
       py="10"
       borderRadius="md"
