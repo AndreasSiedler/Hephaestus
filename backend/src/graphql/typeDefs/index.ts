@@ -3,6 +3,7 @@ import friendshipsTypeDefs from "./friendships";
 import messageTypeDefs from "./messages";
 import skillTypeDefs from "./skills";
 import userTypeDefs from "./users";
+import notificationTypeDefs from "./notifications";
 
 const typeDefs = [
   userTypeDefs,
@@ -10,6 +11,7 @@ const typeDefs = [
   conversationTypeDefs,
   messageTypeDefs,
   friendshipsTypeDefs,
+  notificationTypeDefs,
 ];
 
 export default typeDefs;
