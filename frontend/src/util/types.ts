@@ -252,3 +252,24 @@ export interface FriedshipsData {
 export interface WaitingFriendshipsData {
   waitingFriendships: Array<Friendship>;
 }
+
+/**
+ * Notifications
+ */
+
+export interface Notification {
+  id: string;
+  isRead: boolean;
+  sender: {
+    id: string;
+    name?: string;
+    username: string;
+    image: string;
+  };
+  type: "FRIENDSHIP_CREATE";
+  createdAt: string;
+}
+
+export interface NotificationsData {
+  notifications: Array<Notification>;
+}

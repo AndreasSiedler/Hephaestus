@@ -134,13 +134,13 @@ const resolvers = {
         });
 
         /**
-         * TODO: Add notification
+         * Add notification for the requested friend
          */
         await prisma.notification.create({
           data: {
             type: "FRIENDSHIP_CREATE",
-            userId: myUserId,
-            senderId: friendId,
+            userId: friendId,
+            senderId: myUserId,
           },
         });
 

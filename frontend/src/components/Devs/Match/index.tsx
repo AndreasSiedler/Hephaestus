@@ -27,7 +27,12 @@ interface DevMatchProps {
 }
 
 const DevMatch: React.FC<DevMatchProps> = ({ session }) => {
-  const { data, loading, error, refetch } = useQuery<GetUserData>(UserOperations.Queries.getUser);
+  const {
+    data,
+    loading: getUserLoading,
+    error,
+    refetch,
+  } = useQuery<GetUserData>(UserOperations.Queries.getUser);
   const [requestFriendship, { loading: requestFriendshipLoading }] = useMutation<
     RequestFriendshipData,
     RequestFriendshipVariables
@@ -70,7 +75,7 @@ const DevMatch: React.FC<DevMatchProps> = ({ session }) => {
         boxShadow={"0 0 12px #B73CF1"}
       >
         <Flex height={"full"} flexDir={"column"} alignItems={"center"} textAlign={"center"}>
-          {loading && (
+          {getUserLoading && (
             <>
               <SkeletonCircle startColor="gray.100" endColor="gray.600" size="14" mx="auto" />
               <SkeletonText
@@ -101,7 +106,7 @@ const DevMatch: React.FC<DevMatchProps> = ({ session }) => {
           {data && (
             <UserCard
               getUser={data.getUser}
-              isLoading={requestFriendshipLoading}
+              isLoading={requestFriendshipLoading || getUserLoading}
               onRefreshGetUser={() => refetch()}
               onRequestFriendship={onRequestFriendship}
             />

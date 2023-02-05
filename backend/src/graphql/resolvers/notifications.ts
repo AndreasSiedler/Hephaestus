@@ -22,6 +22,15 @@ const resolvers = {
           where: {
             userId: userId,
           },
+          include: {
+            sender: {
+              select: {
+                name: true,
+                username: true,
+                image: true,
+              },
+            },
+          },
           take: 10,
         });
 

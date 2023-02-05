@@ -1,6 +1,7 @@
 import {
   Avatar,
   AvatarBadge,
+  Box,
   Button,
   Center,
   Flex,
@@ -9,7 +10,6 @@ import {
   Icon,
   IconButton,
   Text,
-  Box,
 } from "@chakra-ui/react";
 import { BiRefresh } from "react-icons/bi";
 import { BsGithub } from "react-icons/bs";
@@ -78,6 +78,7 @@ const UserCard: React.FC<UserCardProps> = ({
             No other users available at the moment. Please try again later.
           </Heading>
           <IconButton
+            isLoading={isLoading}
             mt={5}
             size={"lg"}
             icon={<BiRefresh />}
