@@ -17,5 +17,9 @@ const typeDefs = gql`
   type Query {
     notifications: [Notification]
   }
+
+  type Subscription {
+    notificationCreated: Notification
+  }
 `;
 export default typeDefs;

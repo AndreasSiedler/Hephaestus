@@ -22,4 +22,13 @@ export default {
       }
     `,
   },
+  Subscriptions: {
+    notificationCreated: gql`
+      subscription NotificationCreated {
+        notificationCreated {
+         ${NotificationFields}
+        }
+      }
+    `,
+  },
 };

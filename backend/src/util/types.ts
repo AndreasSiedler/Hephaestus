@@ -84,3 +84,13 @@ export interface ConversationUpdatedSubscriptionData {
 export interface ConversationDeletedSubscriptionPayload {
   conversationDeleted: ConversationPopulated;
 }
+
+/**
+ * Notifications
+ */
+export interface NotificationCreatedSubscriptionPayload {
+  notificationCreated: {
+    id: string;
+    userId: string;
+  };
+}

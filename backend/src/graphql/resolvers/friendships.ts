@@ -85,7 +85,7 @@ const resolvers = {
   },
   Mutation: {
     requestFriendship: async (_: any, args: { friendId: string }, context: GraphQLContext) => {
-      const { prisma, session } = context;
+      const { prisma, session, pubsub } = context;
       const { friendId } = args;
 
       if (!session?.user) {
@@ -136,12 +136,25 @@ const resolvers = {
         /**
          * Add notification for the requested friend
          */
-        await prisma.notification.create({
+        const notification = await prisma.notification.create({
           data: {
             type: "FRIENDSHIP_CREATE",
             userId: friendId,
             senderId: myUserId,
           },
+          include: {
+            sender: {
+              select: {
+                name: true,
+                username: true,
+                image: true,
+              },
+            },
+          },
+        });
+
+        pubsub.publish("NOTIFICATION_CREATED", {
+          notificationCreated: notification,
         });
 
         return {

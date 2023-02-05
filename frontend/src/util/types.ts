@@ -273,3 +273,11 @@ export interface Notification {
 export interface NotificationsData {
   notifications: Array<Notification>;
 }
+
+export interface NotificationCreatedSubscriptionData {
+  subscriptionData: {
+    data: {
+      notificationCreated: Notification;
+    };
+  };
+}

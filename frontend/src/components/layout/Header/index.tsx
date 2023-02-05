@@ -17,25 +17,68 @@ import {
   Text,
   useBreakpointValue,
   useColorModeValue,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { signIn, useSession } from "next-auth/react";
 import NextLink from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { BsGithub } from "react-icons/bs";
 import { RxPerson } from "react-icons/rx";
 import NotificationOperations from "../../../graphql/operations/notifications";
-import { NotificationsData } from "../../../util/types";
+import { NotificationCreatedSubscriptionData, NotificationsData } from "../../../util/types";
 import NotificationList from "./Notifications";
 
 export default function Header() {
   const session = useSession();
+  const chakraToast = useToast();
   const [pageLoading, setLoading] = useState(false);
 
-  const { data: notifications, loading: notificationsLoading } = useQuery<NotificationsData>(
-    NotificationOperations.Query.notifications
-  );
+  /**
+   * Queries
+   */
+  const {
+    data: notifications,
+    loading: notificationsLoading,
+    error: notificationsError,
+    subscribeToMore,
+  } = useQuery<NotificationsData, null>(NotificationOperations.Query.notifications, {
+    onError: ({ message }) => {
+      toast.error(message);
+    },
+  });
 
+  /**
+   * Subscriptions
+   */
+  const subscribeToNewNotifications = () => {
+    console.log("subscribeToNewNotifications");
+    subscribeToMore({
+      document: NotificationOperations.Subscriptions.notificationCreated,
+      updateQuery: (prev, { subscriptionData }: NotificationCreatedSubscriptionData) => {
+        if (!subscriptionData.data) return prev;
+
+        const newNotification = subscriptionData.data.notificationCreated;
+        chakraToast({
+          title: "New friendship request.",
+          position: "top-right",
+          description: `You were sent you a friendship request`,
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+
+        return Object.assign({}, prev, {
+          notifications: [...prev.notifications, newNotification],
+        });
+      },
+    });
+  };
+
+  /**
+   * Handler functions
+   */
   const onSignin = async () => {
     try {
       setLoading(true);
@@ -44,6 +87,18 @@ export default function Header() {
       setLoading(false);
     }
   };
+
+  /**
+   * Execute subscriptions on mount
+   */
+  useEffect(() => {
+    subscribeToNewNotifications();
+  }, []);
+
+  if (notificationsError) {
+    toast.error("There was an error fetching notifications");
+    return null;
+  }
 
   return (
     <Flex

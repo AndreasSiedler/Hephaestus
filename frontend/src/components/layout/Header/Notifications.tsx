@@ -1,6 +1,6 @@
-import { Avatar, Flex, Heading, Text } from "@chakra-ui/react";
-import { Notification } from "../../../util/types";
+import { Avatar, Flex, Heading, Text, VStack } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { Notification } from "../../../util/types";
 
 interface NotificationListProps {
   notifications: Notification[];
@@ -10,7 +10,7 @@ const NotificationList: React.FC<NotificationListProps> = ({ notifications }) =>
   return (
     <Flex>
       {!!notifications.length ? (
-        <Flex>
+        <VStack spacing={3}>
           {notifications.map((notification) => (
             <NextLink href={notification.type === "FRIENDSHIP_CREATE" ? "/friends" : ""}>
               <Flex alignItems={"center"}>
@@ -24,7 +24,7 @@ const NotificationList: React.FC<NotificationListProps> = ({ notifications }) =>
               </Flex>
             </NextLink>
           ))}
-        </Flex>
+        </VStack>
       ) : (
         <Flex>No notificaitons available</Flex>
       )}
