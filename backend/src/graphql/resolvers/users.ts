@@ -34,7 +34,7 @@ const resolvers = {
         throw new GraphQLError(error?.message);
       }
     },
-    getUser: async function getUser(_: any, args: { username: string }, context: GraphQLContext) {
+    getUser: async function getUser(_: any, __: any, context: GraphQLContext) {
       const { prisma, session } = context;
       if (!session?.user) {
         throw new GraphQLError("Not authorized");
@@ -208,7 +208,7 @@ const resolvers = {
           );
         }
 
-        const [deleteUpdate, addUpdate] = await prisma.$transaction(transactionStatements);
+        await prisma.$transaction(transactionStatements);
 
         if (syncGithub) {
           console.log("sync with github");

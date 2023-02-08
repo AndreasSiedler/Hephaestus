@@ -43,10 +43,7 @@ const resolvers = {
         throw new GraphQLError("Conversation Not Found");
       }
 
-      const allowedToView = userIsConversationParticipant(
-        conversation.participants,
-        userId
-      );
+      const allowedToView = userIsConversationParticipant(conversation.participants, userId);
 
       if (!allowedToView) {
         throw new Error("Not Authorized");
@@ -173,11 +170,7 @@ const resolvers = {
 
           return pubsub.asyncIterator(["MESSAGE_SENT"]);
         },
-        (
-          payload: SendMessageSubscriptionPayload,
-          args: { conversationId: string },
-          context: GraphQLContext
-        ) => {
+        (payload: SendMessageSubscriptionPayload, args: { conversationId: string }, ___: any) => {
           return payload.messageSent.conversationId === args.conversationId;
         }
       ),

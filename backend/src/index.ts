@@ -101,7 +101,7 @@ const main = async () => {
       context: async ({ req }): Promise<GraphQLContext> => {
         const session = await getSession({ req });
 
-        return { session: session as Session, prisma, pubsub };
+        return { session: session as unknown as Session, prisma, pubsub };
       },
     })
   );
