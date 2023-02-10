@@ -1,8 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "prisma generate --schema=./src/prisma/schema.prisma && yarn build",
-  "devCommand": "yarn dev",
-  "outputDirectory": "dist",
   "builds": [
     {
       "src": "dist/index.js",
