@@ -1,3 +1,12 @@
 {
-  "version": 2
+  "version": 2,
+  "buildCommand": "prisma generate --schema=./src/prisma/schema.prisma && tsc",
+  "builds": [
+    {
+      "src": "dist/index.js",
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["dist/**"] }
+    }
+  ],
+  "routes": [{ "src": "/(.*)", "dest": "dist/index.js" }]
 }
