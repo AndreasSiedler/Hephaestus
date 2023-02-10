@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "yarn vercel-build",
+  "buildCommand": "prisma generate --schema=./src/prisma/schema.prisma && tsc",
   "outputDirectory": "dist",
   "builds": [
     {
