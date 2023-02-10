@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "vercel-build": "prisma generate --schema=./src/prisma/schema.prisma && node src/index.ts"
+    "vercel-build": "prisma generate --schema=./src/prisma/schema.prisma && yarn build"
   },
   "keywords": [],
   "author": "",
