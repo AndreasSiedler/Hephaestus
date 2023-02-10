@@ -1,6 +1,8 @@
 {
   "version": 2,
   "outputDirectory": "dist",
-  "builds": [{ "src": "dist/index.js", "use": "@vercel/node" }],
-  "routes": [{ "src": "/(.*)", "dest": "/graphql" }]
+  "builds": [
+    { "src": "dist/index.js", "use": "@vercel/node", "config": { "includeFiles": ["dist/**"] } }
+  ],
+  "routes": [{ "src": "/(.*)", "dest": "/dist/index.js" }]
 }
