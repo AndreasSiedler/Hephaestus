@@ -92,6 +92,9 @@ const startApolloServer = async (app: any, httpServer: any) => {
       },
     ],
   });
+
+  await server.start();
+
   app.use(
     "/graphql",
     cors<cors.CorsRequest>(corsOptions),
@@ -104,7 +107,6 @@ const startApolloServer = async (app: any, httpServer: any) => {
       },
     })
   );
-  await server.start();
 };
 
 startApolloServer(app, httpServer);
