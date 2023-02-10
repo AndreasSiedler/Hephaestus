@@ -8,5 +8,6 @@
       "config": { "includeFiles": ["public/**"] }
     }
   ],
-  "routes": [{ "src": "/(.*)", "dest": "public/index.js" }]
+  "routes": [{ "src": "/(.*)", "dest": "public/index.js" }],
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
 }
