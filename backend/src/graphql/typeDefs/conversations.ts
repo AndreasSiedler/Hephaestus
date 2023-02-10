@@ -45,10 +45,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    updateParticipants(
-      conversationId: String!
-      participantIds: [String]!
-    ): Boolean
+    updateParticipants(conversationId: String!, participantIds: [String]!): Boolean
   }
 
   type Subscription {
