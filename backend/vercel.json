@@ -1,13 +1,12 @@
 {
   "version": 2,
-  "outputDirectory": "dist",
   "buildCommand": "prisma generate --schema=./src/prisma/schema.prisma && tsc",
   "builds": [
     {
-      "src": "dist/index.js",
+      "src": "public/index.js",
       "use": "@vercel/node",
-      "config": { "includeFiles": ["dist/**"] }
+      "config": { "includeFiles": ["public/**"] }
     }
   ],
-  "routes": [{ "src": "/(.*)", "dest": "dist/index.js" }]
+  "routes": [{ "src": "/(.*)", "dest": "public/index.js" }]
 }
