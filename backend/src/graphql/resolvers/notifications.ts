@@ -32,7 +32,7 @@ const resolvers = {
               },
             },
           },
-          take: 10,
+          take: 8,
         });
 
         return notifications;
