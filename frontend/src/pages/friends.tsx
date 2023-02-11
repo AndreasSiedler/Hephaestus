@@ -4,6 +4,7 @@ import { NextPageContext } from "next/types";
 import FriendsContainer from "../components/Friends";
 import Header from "../components/layout/Header";
 import Layout from "../components/layout/Layout";
+import { Session } from "../util/types";
 
 const Friends: React.FC = () => {
   const { data: session } = useSession();
@@ -12,7 +13,7 @@ const Friends: React.FC = () => {
     <Layout title="Bittstorm - Schaffe Platz für Neues">
       <Container maxW={"container.lg"} px={10} py={5}>
         <Header />
-        {session && <FriendsContainer session={session} />}
+        {session && <FriendsContainer session={session as Session} />}
       </Container>
     </Layout>
   );
