@@ -1,6 +1,12 @@
-import app from "./api/index";
+import httpServer from "./api/index";
 import dotenv from "dotenv";
 
-dotenv.config();
+const main = async () => {
+  dotenv.config();
+  const PORT = 4000;
 
-app.listen(4000, () => console.info("Server started"));
+  // Now that our HTTP server is fully set up, we can listen to it.
+  await new Promise<void>((resolve) => httpServer.listen({ port: PORT }, resolve));
+  console.log(`Server is now running on http://localhost:${PORT}/graphql`);
+};
+main().catch((err) => console.log(err));

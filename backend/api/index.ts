@@ -65,13 +65,13 @@ const serverCleanup = useServer(
   },
   wsServer
 );
-// Set up ApolloServer.
 
 const corsOptions = {
   origin: process.env.BASE_URL,
   credentials: true,
 };
 
+// Set up ApolloServer.
 const startApolloServer = async (app: any, httpServer: any) => {
   const server = new ApolloServer({
     schema,
