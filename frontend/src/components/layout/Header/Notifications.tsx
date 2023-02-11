@@ -12,7 +12,10 @@ const NotificationList: React.FC<NotificationListProps> = ({ notifications }) =>
       {!!notifications.length ? (
         <VStack spacing={3}>
           {notifications.map((notification) => (
-            <NextLink href={notification.type === "FRIENDSHIP_CREATE" ? "/friends" : ""}>
+            <NextLink
+              key={notification.id}
+              href={notification.type === "FRIENDSHIP_CREATE" ? "/friends" : ""}
+            >
               <Flex alignItems={"center"}>
                 <Avatar size={"sm"} src={notification.sender.image} />
                 <Flex ml={2} flexDir={"column"}>

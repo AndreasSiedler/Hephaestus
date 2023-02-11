@@ -48,6 +48,7 @@ export interface User {
   username: string;
   name: string;
   email: string;
+  image: string;
   bio: string;
   location: string;
   blog: string;
