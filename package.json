@@ -1,0 +1,22 @@
+{
+  "name": "gitbud",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install": "cd backend && npm install --dev",
+    "build": "cd backend && prisma generate --schema=./src/prisma/schema.prisma && tsc",
+    "start": "cd backend/public && node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndreasSiedler/Hephaestus.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndreasSiedler/Hephaestus/issues"
+  },
+  "homepage": "https://github.com/AndreasSiedler/Hephaestus#readme"
+}
