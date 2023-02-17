@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "install": "cd backend && npm install --dev",
-    "build": "cd backend && prisma generate --schema=./src/prisma/schema.prisma && tsc",
+    "build": "cd backend && npx prisma generate --schema=./src/prisma/schema.prisma && tsc",
     "start": "cd backend/public && node index.js"
   },
   "repository": {
