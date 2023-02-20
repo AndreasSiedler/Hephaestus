@@ -1,25 +1,68 @@
 import { ApolloServer } from "@apollo/server";
-import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import express from "express";
-import http from "http";
-import typeDefs from "./graphql/typeDefs";
-import resolvers from "./graphql/resolvers";
-import { getSession } from "next-auth/react";
 import { PrismaClient } from "@prisma/client";
-import { PubSub } from "graphql-subscriptions";
-import { WebSocketServer } from "ws";
-import { useServer } from "graphql-ws/lib/use/ws";
-import * as dotenv from "dotenv";
-import { GraphQLContext, Session, SubscriptionContext } from "./util/types";
-import cors from "cors";
 import { json } from "body-parser";
+import cors from "cors";
+import * as dotenv from "dotenv";
+import express from "express";
+import session from "express-session";
+import { PubSub } from "graphql-subscriptions";
+import { useServer } from "graphql-ws/lib/use/ws";
+import http from "http";
+import passport from "passport";
+import * as uuid from "uuid";
+import { WebSocketServer } from "ws";
+import resolvers from "./graphql/resolvers";
+import typeDefs from "./graphql/typeDefs";
+import { GraphQLContext, Session, SubscriptionContext } from "./util/types";
+
+declare global {
+  namespace Express {
+    interface User {
+      id: string;
+    }
+  }
+}
+
+const PORT = process.env.PORT || 4000;
+const SESSION_SECRECT = process.env.SESSION_SECRER || "secret";
 
 async function main() {
   dotenv.config();
+
+  const prisma = new PrismaClient();
+  const pubsub = new PubSub();
+
+  passport.serializeUser((user, done) => {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(async (id, done) => {
+    const user = await prisma.user.findUnique({ where: { id: id as string } });
+    if (!user) {
+      return done("No matching user");
+    }
+    done(null, user);
+  });
+
   const app = express();
   const httpServer = http.createServer(app);
+
+  // Setup express session
+  app.use(
+    session({
+      genid: (req) => uuid.v4(),
+      secret: SESSION_SECRECT,
+      resave: false,
+      saveUninitialized: false,
+    })
+  );
+
+  // Setup passport session
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   // Create our WebSocket server using the HTTP server we just set up.
   const wsServer = new WebSocketServer({
@@ -31,12 +74,6 @@ async function main() {
     typeDefs,
     resolvers,
   });
-
-  /**
-   * Context parameters
-   */
-  const prisma = new PrismaClient();
-  const pubsub = new PubSub();
 
   // Save the returned server's info so we can shutdown this server later
   const serverCleanup = useServer(
@@ -78,28 +115,23 @@ async function main() {
   });
   await server.start();
 
-  const corsOptions = {
-    origin: process.env.CLIENT_ORIGIN,
-    credentials: true,
-  };
-
   app.use(
     "/graphql",
-    cors<cors.CorsRequest>(corsOptions),
+    cors<cors.CorsRequest>({
+      origin: process.env.CLIENT_ORIGIN,
+      credentials: true,
+    }),
     json(),
     expressMiddleware(server, {
       context: async ({ req }): Promise<GraphQLContext> => {
-        const session = await getSession({ req });
+        const session = {};
 
         return { session: session as Session, prisma, pubsub };
       },
     })
   );
 
-  const PORT = process.env.PORT || 4000;
-
   await new Promise<void>((resolve) => httpServer.listen({ port: PORT }, resolve));
-
   console.log(`Server is now running on port ${PORT}`);
 }
 
