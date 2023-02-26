@@ -17,7 +17,7 @@ import { WebSocketServer } from "ws";
 import resolvers from "./graphql/resolvers";
 import typeDefs from "./graphql/typeDefs";
 import { GraphQLContext, Session, SubscriptionContext } from "./util/types";
-
+import authRouter from "./routes/auth";
 declare global {
   namespace Express {
     interface User {
@@ -29,24 +29,18 @@ declare global {
 const PORT = process.env.PORT || 4000;
 const SESSION_SECRECT = process.env.SESSION_SECRER || "secret";
 
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
+});
+
 async function main() {
   dotenv.config();
 
   const prisma = new PrismaClient();
   const pubsub = new PubSub();
 
-  passport.serializeUser((user, done) => {
-    done(null, user.id);
-  });
-
-  passport.deserializeUser(async (id, done) => {
-    const user = await prisma.user.findUnique({ where: { id: id as string } });
-    if (!user) {
-      return done("No matching user");
-    }
-    done(null, user);
-  });
-
+  // Setup servers
   const app = express();
   const httpServer = http.createServer(app);
 
@@ -68,11 +62,6 @@ async function main() {
   const wsServer = new WebSocketServer({
     server: httpServer,
     path: "/graphql/subscriptions",
-  });
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
   });
 
   // Save the returned server's info so we can shutdown this server later
@@ -130,6 +119,8 @@ async function main() {
       },
     })
   );
+
+  app.use("/auth", authRouter);
 
   await new Promise<void>((resolve) => httpServer.listen({ port: PORT }, resolve));
   console.log(`Server is now running on port ${PORT}`);
