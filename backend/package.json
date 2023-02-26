@@ -26,8 +26,10 @@
     "graphql-tag": "^2.12.6",
     "graphql-ws": "^5.9.1",
     "lodash.merge": "^4.6.2",
+    "next-auth": "^4.19.2",
     "passport": "^0.6.0",
     "prisma": "^4.9.0",
+    "react": "^18.2.0",
     "uuid": "^9.0.0",
     "ws": "^8.12.0"
   },

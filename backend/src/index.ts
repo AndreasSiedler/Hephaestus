@@ -7,17 +7,15 @@ import { json } from "body-parser";
 import cors from "cors";
 import * as dotenv from "dotenv";
 import express from "express";
-import session from "express-session";
 import { PubSub } from "graphql-subscriptions";
 import { useServer } from "graphql-ws/lib/use/ws";
 import http from "http";
-import passport from "passport";
-import * as uuid from "uuid";
+import { getSession } from "next-auth/react";
 import { WebSocketServer } from "ws";
 import resolvers from "./graphql/resolvers";
 import typeDefs from "./graphql/typeDefs";
 import { GraphQLContext, Session, SubscriptionContext } from "./util/types";
-import authRouter from "./routes/auth";
+
 declare global {
   namespace Express {
     interface User {
@@ -27,7 +25,7 @@ declare global {
 }
 
 const PORT = process.env.PORT || 4000;
-const SESSION_SECRECT = process.env.SESSION_SECRER || "secret";
+// const SESSION_SECRECT = process.env.SESSION_SECRER || "secret";
 
 const schema = makeExecutableSchema({
   typeDefs,
@@ -45,18 +43,18 @@ async function main() {
   const httpServer = http.createServer(app);
 
   // Setup express session
-  app.use(
-    session({
-      genid: (req) => uuid.v4(),
-      secret: SESSION_SECRECT,
-      resave: false,
-      saveUninitialized: false,
-    })
-  );
+  // app.use(
+  //   session({
+  //     genid: (req) => uuid.v4(),
+  //     secret: SESSION_SECRECT,
+  //     resave: false,
+  //     saveUninitialized: false,
+  //   })
+  // );
 
   // Setup passport session
-  app.use(passport.initialize());
-  app.use(passport.session());
+  // app.use(passport.initialize());
+  // app.use(passport.session());
 
   // Create our WebSocket server using the HTTP server we just set up.
   const wsServer = new WebSocketServer({
@@ -113,14 +111,14 @@ async function main() {
     json(),
     expressMiddleware(server, {
       context: async ({ req }): Promise<GraphQLContext> => {
-        const session = {};
+        const session = await getSession({ req });
 
         return { session: session as Session, prisma, pubsub };
       },
     })
   );
 
-  app.use("/auth", authRouter);
+  // app.use("/auth", authRouter);
 
   await new Promise<void>((resolve) => httpServer.listen({ port: PORT }, resolve));
   console.log(`Server is now running on port ${PORT}`);
